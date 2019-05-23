@@ -1,0 +1,34 @@
+{
+  "name": "gurusociety",
+  "version": "1.0.0",
+  "description": "Social Network for like-minded professionals",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mausuf/GuruSociety.git"
+  },
+  "keywords": [
+    "Social",
+    "Network",
+    "Guru"
+  ],
+  "author": "Mausuf",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/mausuf/GuruSociety/issues"
+  },
+  "homepage": "https://github.com/mausuf/GuruSociety#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "config": "^3.1.0",
+    "express": "^4.17.0",
+    "express-validator": "^5.3.1",
+    "gravatar": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.5.11",
+    "request": "^2.88.0"
+  }
+}
