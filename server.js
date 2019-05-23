@@ -1,5 +1,9 @@
 const express = require("express");
+const connectDB = require("./config/db");
 const app = express();
+
+// Connect Database
+connectDB();
 
 app.get('/', (req, res) => res.send("API is Running"));
 
@@ -18,7 +22,7 @@ app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
 // USES FOR DEPENDENCIES
 // "bcrypt" --> Password encryption
-// "config" --> Global variables
+// "config" --> Global variables --> uses default.json file found in config folder
 // "express" --> Main web framework
 // "express-validator" --> For data validation for POST request to API
 // "gravatar" --> Profile avatars
