@@ -4,6 +4,7 @@
 const express = require("express");
 const router = express.Router();
 const { check, validationResult } = require("express-validator/check"); //Documentation @: https://express-validator.github.io/docs/
+const bcrypt = require("bcryptjs"); //install bcryptjs, initially bcrypt was installed
 
 //Bring in gravatar
 const gravatar = require("gravatar");
@@ -41,7 +42,7 @@ async (req, res) => {  //label as async to implement Try Catch below
             d: "mm" // default if user does not have gravatar, you could put 404 for error if you wanted
         })
 
-        user = new User({ // variable is set to this instance of a new User, and pass in objects of the fields we need.
+        user = new User({ // variable is set to this instance of a new User, and pass in objects of the fields we need. Before we save we need to encrpt password with bcryptjs. ***Testing in postman will CREATE user instance in mongoDB Atlas***
             name, 
             email, 
             avatar, 
@@ -49,11 +50,15 @@ async (req, res) => {  //label as async to implement Try Catch below
         })
 
     //Encrpt user's password
+        const salt = await bcrypt.genSalt(10);   // salt does the hashing, passing in rounds of 10, more = more secure but slower
+        user.password = await bcrypt.hash(password, salt); // hash takes in 1) plain text password 2) salt
+        await user.save(); // Saving user. Note: Anything that uses a promise, use await since we're using async await, since we're not using .then
 
     //Return jsonwebtoken
+        
 
 
-    res.send("Users route"); //For testing in Postman
+    res.send("Users registered"); //For testing in Postman --> Updated to registered
     console.log(req.body); //For testing in nodemon. req.body is the object of data (name, email, and password) that will be sent to this route, for this to work we need to initialize the middle ware from server.js
     } catch(err) {
         console.error(err.message);
