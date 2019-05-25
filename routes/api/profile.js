@@ -154,7 +154,7 @@ router.delete("/", auth, async (req, res) => {
         //@todo - remove users posts
 
         //REMOVE PROFILE
-        await Profile.findOneAndRemove({ user: req.user.id }); // No need to Get anything, so need for variable
+        await Profile.findOneAndRemove({ user: req.user.id }); // No need to Get anything, so no need for variable
         //REMOVE USER
         await User.findOneAndRemove({ _id: req.user.id }); 
 
@@ -164,6 +164,59 @@ router.delete("/", auth, async (req, res) => {
         res.status(500).send("Server error :(");
     }
 
+});
+
+
+// @route   PUT api/profile/experience --> This can be made as POST as well, however it is updating info an array within a collection within a document***. Updating part of a profile
+// @desc    Add profile experience
+// @access  Private (Use auth middleware & validation middleware)
+router.put("/experience", [ auth, [
+    check("title", "Title is required please").not().isEmpty(),
+    check("company", "Company is required please").not().isEmpty(),
+    check("from", "From date is required please").not().isEmpty()
+    ] 
+], async (req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() }); // Will give us array of errors
+    }
+
+    // Get (pull) this information out of req.body, so need to destrucuture data
+    const {
+        title,
+        company,
+        location,
+        from,
+        to,
+        current,
+        description
+    } = req.body;
+
+    // This will create an object with the data the user submits; this is benefityou can have this strucuture in 1 collection in nosql database instead of a seperate table like in sql db
+    const newExp = {
+        title,
+        company,
+        location,
+        from,
+        to,
+        current,
+        description
+    };
+
+    // To interact with mongodb
+    try {
+        const profile = await Profile.findOne({ user: req.user.id }); // Create variable called profile since we need to fetch the profile we want to add the expereince to.
+
+        profile.experience.unshift(newExp); // Unshift pushes onto beginning so most recent are first
+
+        await profile.save();
+
+        res.json(profile);
+
+    } catch(err) {
+        console.error(err.message);
+        res.status(500).send("Server error :c");
+    }
 });
 
 
