@@ -32,7 +32,7 @@ async (req, res) => {  //label as async to implement Try Catch below
     // See if user exists
         let user = await User.findOne({ email: email }); // use "await" due to async usage above. findOne takes in a field, in this case email 
         if(user) {
-            res.status(400).json({ errors: [ { msg: "User already exists" } ] }); // within json() we are matching the array or errors written in line 22
+            return res.status(400).json({ errors: [ { msg: "User already exists" } ] }); // within json() we are matching the array or errors written in line 22
         }
 
     // Get users gravatar (based on user's email) --> Pass the user's email into a method that will get us the URL for the gravatar
