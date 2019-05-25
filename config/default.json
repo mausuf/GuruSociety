@@ -1,3 +1,4 @@
 {
-    "mongoURI": "mongodb+srv://mausuf:mausufpassword@gurusociety-eo7dn.mongodb.net/test?retryWrites=true"
+    "mongoURI": "mongodb+srv://mausuf:mausufpassword@gurusociety-eo7dn.mongodb.net/test?retryWrites=true",
+    "jwtSecret": "mysecrettoken"
 }
