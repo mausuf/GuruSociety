@@ -43,6 +43,36 @@ router.post("/", [ auth, [   // 1) First middleware is 'auth' 2) second middlewa
             return res.status(400).json({ errors: errors.array() });
         }
 
+        const {  // Need to check if fields were filled out before submitting to the database
+            company,
+            website,
+            location,
+            bio,
+            status,
+            githubusername,
+            skills,
+            youtube,
+            facebook,
+            twitter,
+            instagram,
+            linkedin
+        } = req.body;
+
+        // Build profile object
+        const profileFields = {};
+        profileFields.user = req.user.id; // Matching profile fields with login user
+        if(company) profileFields.company = company;
+        if (website) profileFields.website = website;
+        if(location) profileFields.location = location;
+        if (bio) profileFields.bio = bio;
+        if(status) profileFields.status = status;
+        if (githubusername) profileFields.githubusername = githubusername;
+        if (skills) {
+            profileFields.skills = skills.split(',').map(skill => skill.trim()); // .split turns the skills string into an array with a comma delimitor; map will go through the array, for each skill it will be trimmed to get rid of spaces. Needs to be done due to the way skills is passed in.
+        }
+
+        console.log(profileFields.skills);
+        res.send("Skills is working!");
         
     }
 );
