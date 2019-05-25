@@ -122,7 +122,8 @@ router.get("/", async (req, res) => {
         res.status(500).send("Server error :(");
     }
 
-})
+});
+
 
 // @route   GET api/profile/user/:user_id
 // @desc    Get profile by user ID
@@ -142,7 +143,28 @@ router.get("/user/:user_id", async (req, res) => {
         res.status(500).send("Server error :/");
     }
 
-})
+});
+
+
+// @route   DELETE api/profile/
+// @desc    Delete profile , user, and posts
+// @access  Private (Use auth middleware & validation middleware)
+router.delete("/", auth, async (req, res) => {
+    try {
+        //@todo - remove users posts
+
+        //REMOVE PROFILE
+        await Profile.findOneAndRemove({ user: req.user.id }); // No need to Get anything, so need for variable
+        //REMOVE USER
+        await User.findOneAndRemove({ _id: req.user.id }); 
+
+        res.json({ msg: "User and Profile deleted :O" });
+    } catch(err) {
+        console.error(err.message);
+        res.status(500).send("Server error :(");
+    }
+
+});
 
 
 module.exports = router;
