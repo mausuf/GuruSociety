@@ -61,19 +61,51 @@ router.post("/", [ auth, [   // 1) First middleware is 'auth' 2) second middlewa
         // Build profile object
         const profileFields = {};
         profileFields.user = req.user.id; // Matching profile fields with login user
-        if(company) profileFields.company = company;
+        if (company) profileFields.company = company;
         if (website) profileFields.website = website;
-        if(location) profileFields.location = location;
+        if (location) profileFields.location = location;
         if (bio) profileFields.bio = bio;
-        if(status) profileFields.status = status;
+        if (status) profileFields.status = status;
         if (githubusername) profileFields.githubusername = githubusername;
         if (skills) {
             profileFields.skills = skills.split(',').map(skill => skill.trim()); // .split turns the skills string into an array with a comma delimitor; map will go through the array, for each skill it will be trimmed to get rid of spaces. Needs to be done due to the way skills is passed in.
         }
 
-        console.log(profileFields.skills);
-        res.send("Skills is working!");
+        // console.log(profileFields.skills);
+        // res.send("Skills is working!"); // --> Commenting out to get next res.send
+
+        //Build social object
+        profileFields.social = {}; // Initialize social, otherwise undefined error will occur stating can't find twitter of undefined
+        if (youtube)profileFields.social.youtube = youtube;
+        if (twitter)profileFields.social.twitter = twitter;
+        if (facebook)profileFields.social.facebook = facebook;
+        if (linkedin)profileFields.social.linkedin = linkedin;
+        if (instagram)profileFields.social.instagram = instagram;
         
+        // console.log(profileFields.social.twitter); // Testing
+
+        // Update and insert the data with a try catch
+        try{
+            
+            let profile = await Profile.findOne({ user: req.user.id }) // find Profile model by the user; get the user by req.user.id which comes from the token
+            
+            if(profile) {
+
+                // UPDATE
+                // If there is a proile, findOneAndUpdate method via promise(using await for async); param 1 - by user; param 2 - set profile fields above; param 3 - add an object of new and set to true
+                profile = await Profile.findOneAndUpdate({ user: req.user.id }, { $set: profileFields }, { new: true });
+                return res.json(profile); // Return profile if found
+            }
+                // CREATE
+                // If no profile found, create it
+                profile = new Profile(profileFields);
+                await profile.save();
+                res.json(profile);
+
+        } catch(err) {
+            console.error(err.message);
+            res.status(500).send("Server error :/")
+        }
     }
 );
 
