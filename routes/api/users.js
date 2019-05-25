@@ -5,6 +5,9 @@ const express = require("express");
 const router = express.Router();
 const { check, validationResult } = require("express-validator/check"); //Documentation @: https://express-validator.github.io/docs/
 
+//Bring in gravatar
+const gravatar = require("gravatar");
+
 //Bring in User Model
 const User = require("../../models/User");
 
@@ -16,7 +19,7 @@ router.post("/", [ // Adding second parameter to post route, check(found in docu
     check("email", "Please include a valid email address").isEmail(), //isEmail will check for email formatting
     check("password", "Please enter a password with 6 or more characters").isLength({ min: 6 })
 ], 
-async (req, res) => {                       //label as async to implement Try Catch below
+async (req, res) => {  //label as async to implement Try Catch below
     const errors = validationResult(req);
     if(!errors.isEmpty()) { //This means --> "If there are errors" 
         return res.status(400).json({ errors: errors.array() }); //status 400 is bad request
@@ -25,9 +28,25 @@ async (req, res) => {                       //label as async to implement Try Ca
     const { name, email, password } = req.body; //Destructure/Pulling out name, email, and password from req.body
 
     try {
-    //See if user exists
+    // See if user exists
+        let user = await User.findOne({ email: email }); // use "await" due to async usage above. findOne takes in a field, in this case email 
+        if(user) {
+            res.status(400).json({ errors: [ { msg: "User already exists" } ] }); // within json() we are matching the array or errors written in line 22
+        }
 
-    //Get users gravatar (based on user's email)
+    // Get users gravatar (based on user's email) --> Pass the user's email into a method that will get us the URL for the gravatar
+        const avatar = gravatar.url(email, {
+            s: "200", // default size, a string of 200
+            r: "pg", // image rating
+            d: "mm" // default if user does not have gravatar, you could put 404 for error if you wanted
+        })
+
+        user = new User({ // variable is set to this instance of a new User, and pass in objects of the fields we need.
+            name, 
+            email, 
+            avatar, 
+            password
+        })
 
     //Encrpt user's password
 

@@ -7,7 +7,8 @@ const connectDB = async () => {
     // try will try to connect, if there is an error it will catch it
     try {
         await mongoose.connect(db, {
-            useNewUrlParser: true // This gets rid of Deprecation Warning when running server
+            useNewUrlParser: true, // This gets rid of Deprecation Warning when running server ---> Deprecation Warnin is mongoose error
+            useCreateIndex: true //To get rid of Deprecation Warning while setting up to see if new "User already exists" in users.js file
         });
         console.log("mongoDB Connected Successfully!");
     } catch(err) {
