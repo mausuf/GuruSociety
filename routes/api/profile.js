@@ -110,4 +110,39 @@ router.post("/", [ auth, [   // 1) First middleware is 'auth' 2) second middlewa
 );
 
 
+// @route   GET api/profile/
+// @desc    Get all profiles
+// @access  Public (No auth middleware)
+router.get("/", async (req, res) => {
+    try {
+        const profiles = await Profile.find().populate("user", ["name", "avatar"]);
+        res.json(profiles);
+    } catch(err) {
+        console.error(err.message);
+        res.status(500).send("Server error :(");
+    }
+
+})
+
+// @route   GET api/profile/user/:user_id
+// @desc    Get profile by user ID
+// @access  Public (No auth middleware)
+router.get("/user/:user_id", async (req, res) => {
+    try {
+        const profile = await Profile.findOne({ user: req.params.user_id }).populate("user", ["name", "avatar"]); // profile instead of profiles since were getting only 1 using findOne and the id comes from the URL
+
+        if(!profile) return res.status(400).json({ msg: "There is no profile for this user :( you can create a new profile though! :)" });
+
+        res.json(profile);
+    } catch(err) {
+        console.error(err.message);
+        if(err.kind == "ObjectId") { // Adding this if statement to avoid getting res.status(500).send("Server error :/"). ObjectId is _id defined in mongodb.
+            return res.status(400).json({ msg: "Profile not found :( you can create a new profile though! :)" })
+        }
+        res.status(500).send("Server error :/");
+    }
+
+})
+
+
 module.exports = router;

@@ -8,12 +8,13 @@ const connectDB = async () => {
     try {
         await mongoose.connect(db, {
             useNewUrlParser: true, // This gets rid of Deprecation Warning when running server ---> Deprecation Warnin is mongoose error
-            useCreateIndex: true //To get rid of Deprecation Warning while setting up to see if new "User already exists" in users.js file
+            useCreateIndex: true, //To get rid of Deprecation Warning while setting up to see if new "User already exists" in users.js file
+            useFindAndModify: false // Documentation @ https://mongoosejs.com/docs/deprecations.html for all 3
         });
         console.log("mongoDB Connected Successfully!");
     } catch(err) {
         console.log(err.message);
-        // Exit process with faiulure
+        // Exit process with failure
         process.exit(1);
     }
  }
