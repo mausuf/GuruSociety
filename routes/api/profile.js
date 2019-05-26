@@ -242,4 +242,82 @@ router.delete("/experience/:exp_id", auth, async (req, res) => {
     }
 });
 
+
+// @route   PUT api/profile/education
+// @desc    Add profile education
+// @access  Private (Use auth middleware & validation middleware)
+router.put("/education", [ auth, [
+    check("school", "School is required please").not().isEmpty(),
+    check("degree", "Degree is required please").not().isEmpty(),
+    check("fieldofstudy", "Field of study is required please").not().isEmpty(),
+    check("from", "From date is required please").not().isEmpty()
+    ] 
+], async (req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() }); // Will give us array of errors
+    }
+
+    // Get (pull) this information out of req.body, so need to destrucuture data
+    const {
+        school,
+        degree,
+        fieldofstudy,
+        from,
+        to,
+        current,
+        description
+    } = req.body;
+
+    // This will create an object with the data the user submits; this is benefityou can have this strucuture in 1 collection in nosql database instead of a seperate table like in sql db
+    const newEdu = {
+        school,
+        degree,
+        fieldofstudy,
+        from,
+        to,
+        current,
+        description
+    };
+
+    // To interact with mongodb
+    try {
+        const profile = await Profile.findOne({ user: req.user.id }); // Create variable called profile since we need to fetch the profile we want to add the expereince to.
+
+        profile.education.unshift(newEdu); // Unshift pushes onto beginning so most recent are first
+
+        await profile.save();
+
+        res.json(profile);
+
+    } catch(err) {
+        console.error(err.message);
+        res.status(500).send("Server error :c");
+    }
+});
+
+
+// @route   DELETE api/profile/education/:edu_id
+// @desc    Delete education from profile
+// @access  Private (Use auth middleware & validation middleware)
+router.delete("/education/:edu_id", auth, async (req, res) => {
+    try {
+        const profile = await Profile.findOne({ user: req.user.id }); // Get profile by user id
+
+        // Need to get the correct experience to remove so
+        // Get remove index
+        const removeIndex = profile.education.map(item => item.id).indexOf(req.params.edu_id); // set variable removeIndex and map through it and pass in item and return item.id then chain on indexOf and match it to that exp id.
+
+        profile.education.splice(removeIndex, 1); // splice the experience and take out 1
+
+        await profile.save(); // re-saving profile
+
+        res.json(profile); // sending back profile
+    } catch(err) {
+        console.error(err.message);
+        res.status(500).send("Server error :'C");
+    }
+});
+
+
 module.exports = router;
