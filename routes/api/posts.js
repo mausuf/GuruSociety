@@ -46,4 +46,18 @@ async (req, res) => {
 });
 
 
+// @route   GET api/posts
+// @desc    Get all posts
+// @access  Private (need auth and express validator) because you need to be logged in to see the post thus need for Private. (Depends on app creators preference)
+router.get("/", auth, async (req, res) => {
+    try {
+        const posts = await Post.find().sort({ date: -1 }); // Get variable posts and tell it find a Post model and sort from the most date, and most recent is set as -1. (Oldest is set as 1)
+        res.json(posts);
+    } catch(err) {
+        console.error(err.message);
+        res.status(500).send("Sever ever dude :/")
+    }
+});
+
+
 module.exports = router;
