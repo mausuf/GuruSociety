@@ -23,11 +23,11 @@ router.get("/me", auth, async (req, res) => { // Added auth as second parameter 
 
         if(!profile) { //If no profile exists
             return res.status(400).json({ msg: "No profile exist for this user" })
-        }
+        };
 
         res.json(profile); //If there is a profile
 
-    } catch(err){
+    } catch(err) {
         console.log(err.message);
         res.status(500).send("Server error :(");
     }

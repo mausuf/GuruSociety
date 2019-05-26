@@ -3,8 +3,8 @@ const Schema = mongoose.Schema; // Create variable called Schema
 
 const PostSchema = new Schema ({
     user: { // Post need to be connected to a user so reference to user
-        type: Schema.type.ObjectId, 
-        ref: 'users' // reference users model
+        type: Schema.Types.ObjectId, 
+        ref: "users" // reference users model
     },
     text: {
         type: String,
@@ -45,7 +45,11 @@ const PostSchema = new Schema ({
                 default: Date.now
             }
         }
-    ]
+    ],
+    date: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 
