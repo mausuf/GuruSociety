@@ -82,4 +82,35 @@ router.get("/:id", auth, async (req, res) => {
 });
 
 
+// @route   DELETE api/posts/:id
+// @desc    Delete a post
+// @access  Private (need auth and express validator) because you need to be logged in to see the post thus need for Private. (Depends on app creators preference)
+router.delete("/:id", auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+
+        // Check if there is no post with the Id being searched for to delete
+        if (!post) { 
+            return res.status(404).json({ msg: "Sorry, post not found :c" });
+        };
+
+        // Only the user that owns the post can be able to delete the post
+        // Check user is post owner
+        if (post.user.toString() !== req.user.id) { // req.user.id is the logged in user; req.user.id is a string, post.user is an object ID, so we need to add the .toString() method --> will not work without this.
+            return res.status(401).json({ msg: "Why are you trying to delete another user's post? :P" })
+        };
+
+        await post.remove();
+
+        res.json({ msg: "Post has been removed :3" });
+    } catch(err) {
+        console.error(err.message);
+        if (err.kind === "ObjectId") {
+            return res.status(404).json({ msg: "Sorry, post not found :c" });
+        };
+        res.status(500).send("Sever ever dude :/")
+    }
+});
+
+
 module.exports = router;
