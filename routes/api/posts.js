@@ -60,4 +60,26 @@ router.get("/", auth, async (req, res) => {
 });
 
 
+// @route   GET api/posts/:id
+// @desc    Get posts by ID
+// @access  Private (need auth and express validator) because you need to be logged in to see the post thus need for Private. (Depends on app creators preference)
+router.get("/:id", auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+
+        if (!post) { //If there is no post with the Id being searched for
+            return res.status(404).json({ msg: "Sorry, post not found :c" });
+        };
+
+        res.json(post);
+    } catch(err) {
+        console.error(err.message);
+        if (err.kind === "ObjectId") { // err object has property called kind; if ObjectId is the kind of error, that means the ObjectId is not formatted thus there will be no post found*** When would the res.status(500) get thrown?
+            return res.status(404).json({ msg: "Sorry, post not found :C" });
+        };
+        res.status(500).send("Sever ever dude :(")
+    }
+});
+
+
 module.exports = router;
