@@ -113,4 +113,29 @@ router.delete("/:id", auth, async (req, res) => {
 });
 
 
+// @route   PUT api/posts/like/:id
+// @desc    Like a post
+// @access  Private (need auth and express validator) Only logged in users can like a post
+router.put("/like/:id", auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id); // fetching the post by id
+        
+        // Check if the post has already been liked by the logged in user
+        if(post.likes.filter(like => like.user.toString() === req.user.id).length > 0) { // (filter is a high order array method) like function --> compares the current user to the user that's logged in; the .length > 0 means the post has already been liked
+        return res.status(400).json({ msg: "You've already liked this post! I know it's amazing but no more likes :P" }); // return ends the process
+        }
+
+        post.likes.unshift({ user: req.user.id }); // unshift adds the user id at the beginning of the array
+
+        await post.save(); // save the like
+
+        res.json(post.likes); // responding with the: likes
+    } catch(err) {
+        console.err(err.message);
+        res.status(500).send("Server error my dude :/");
+    }
+});
+
+
+
 module.exports = router;
