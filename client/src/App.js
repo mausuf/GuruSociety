@@ -1,27 +1,12 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Fragment } from 'react'; // Fragment is a ghost element that doesn't show up in dom
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+
+const App = () => // no need for curly brace because we're returning a single div or fragment
+  <Fragment>
+    <h1>App WIP</h1>
+  </Fragment>
+
 
 export default App;
 
