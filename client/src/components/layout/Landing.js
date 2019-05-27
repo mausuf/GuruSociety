@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { Link } from "react-router-dom"; // In order links via react router (and not have links automatically goto .html) need to import react-router-dom and apply to links below
 
 const Landing = () => {
     return (
@@ -11,8 +12,8 @@ const Landing = () => {
               other developers!
             </p>
             <div className="buttons">
-              <a href="register.html" className="btn btn-primary">Sign Up</a>
-              <a href="login.html" className="btn btn-light">Login</a>
+              <Link to="/register" className="btn btn-primary">Sign Up</Link>
+              <Link to="/login" className="btn btn-light">Login</Link>
             </div>
           </div>
         </div>
