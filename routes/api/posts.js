@@ -165,5 +165,40 @@ router.put("/unlike/:id", auth, async (req, res) => {
 });
 
 
+// @route   POST api/posts/comment/:id
+// @desc    Comment on a post; comments are similar to posts except they don't have likes
+// @access  Private (need auth and express validator) because you need to be logged in to comment on post
+router.post("/comment/:id", [ auth, [ 
+    check("text", "Text is required please").not().isEmpty() ] ],
+async (req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+
+        const user = await User.findById(req.user.id).select("-password");     //User is model that is being imported; findById since we're logged in, we have the token which gives us the user ID which puts it inside req.user.id. - this will give us the user
+        const post = await Post.findById(req.params.id) // req.params.id fetches id from the url; 
+
+        const newComment = { // Since there is no collection in db for this, it's just going to be a new object.
+            text: req.body.text,
+            name: user.name,
+            avatar: user.avatar,
+            user: req.user.id
+        };
+
+        // Add this new comment to the post's comments, use unshift to add to beginning, then pass in newComment
+        post.comments.unshift(newComment);
+
+        await post.save();
+        res.json(post.comments);
+
+    } catch(err) {
+        console.error(err.message);
+        res.status(500).send("Server error my dude :/");
+    }
+});
+
 
 module.exports = router;
