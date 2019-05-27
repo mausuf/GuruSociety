@@ -137,5 +137,33 @@ router.put("/like/:id", auth, async (req, res) => {
 });
 
 
+// @route   PUT api/posts/unlike/:id
+// @desc    Unlike a post
+// @access  Private (need auth and express validator) Only logged in users can unlike a post
+router.put("/unlike/:id", auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id); // fetching the post by id
+        
+        // Check if the post has already been liked by the logged in user
+        if(
+            post.likes.filter(like => like.user.toString() === req.user.id).length === 0) { // (filter is a high order array method) like function --> compares the current user to the user that's logged in; the .length = 0 means the logged in user has not yet liked it
+        return res.status(400).json({ msg: "You can't unlike something you've not liked" }); // return ends the process
+        };
+
+        // Get the remove index  (find like to remove)
+        const removeIndex = post.likes.map(like => like.user.toString()).indexOf(req.user.id); // map -> For each like, return like.user, then chain on get indexOf the user id 
+
+        post.likes.splice(removeIndex, 1); // splice the like out of the array; 1 -> will remove 1
+
+        await post.save(); // save the array of likes
+
+        res.json(post.likes); // responding with the likes
+    } catch(err) {
+        console.err(err.message);
+        res.status(500).send("Server error my dude :/");
+    }
+});
+
+
 
 module.exports = router;
