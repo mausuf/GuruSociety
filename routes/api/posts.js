@@ -131,7 +131,7 @@ router.put("/like/:id", auth, async (req, res) => {
 
         res.json(post.likes); // responding with the: likes
     } catch(err) {
-        console.err(err.message);
+        console.error(err.message);
         res.status(500).send("Server error my dude :/");
     }
 });
@@ -159,7 +159,7 @@ router.put("/unlike/:id", auth, async (req, res) => {
 
         res.json(post.likes); // responding with the likes
     } catch(err) {
-        console.err(err.message);
+        console.error(err.message);
         res.status(500).send("Server error my dude :/");
     }
 });
@@ -200,5 +200,43 @@ async (req, res) => {
     }
 });
 
+
+// @route   DELETE api/posts/comment/:id/:comment_id  --> Need the post ID and the comment ID in order to delete a comment
+// @desc    Delete a comment on a post
+// @access  Private (need auth and express validator) because you need to be logged in to comment on post
+router.delete("/comment/:id/:comment_id", auth, async (req, res) => {  //
+    try {
+        // fetch the post by it's id
+        const post = await Post.findById(req.params.id); 
+
+        //Pull out comment from the post
+        const comment = post.comments.find(comment => comment.id === req.params.comment_id); //.toString()
+        
+        // Make sure comment exists
+        if(!comment) {
+            return res.status(404).json({ msg: "Cant delete a comment that doesn't exist my dude!" });
+        };
+
+        // Check if user deleting comment is the user that made it
+        if(comment.user.toString() !== req.user.id) { // turn object id of comment.user into a string and if not = to logged in user
+            return res.status(401).json({ msg: "Sorry, I cant let you do that" });
+        }; 
+       
+        // Get the remove index  (find comment to remove)
+        const removeIndex = post.comments.map(comment => comment.id).indexOf(req.params.comment_id);
+
+        // splice the comment out of the array; 1 -> will remove 1
+        post.comments.splice(removeIndex, 1); 
+        
+        // save the array of commments
+        await post.save(); 
+
+        // responding with the comments
+        res.json(post.comments); 
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Sever error my dudette");
+    }
+});
 
 module.exports = router;
