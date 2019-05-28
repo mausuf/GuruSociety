@@ -14,7 +14,7 @@ import setAuthToken from "../utils/setAuthToken";
 
 // Load User
     export const loadUser = () => async dispatch => { // Check to see if there is a token, and if it exists, need to always send it into a global header. (see setAuthToken.js)
-        if(localStorage.token) { // Check local storage in this file as well as mai App.js file
+        if(localStorage.token) { // Check local storage; This code here only runs the first time the user loads, so we need to add this to App.js also for it to check everytime.
             setAuthToken(localStorage.token); // This will set the header with the Token if it exists
         }
         
@@ -27,7 +27,9 @@ import setAuthToken from "../utils/setAuthToken";
                 payload: res.data  //payload is the data sent from api/auth which is the USER
             })
         } catch(err) {
-            dispatch({ AUTH_ERROR });
+            dispatch({ 
+                type: AUTH_ERROR 
+            })
         }
     };
 
