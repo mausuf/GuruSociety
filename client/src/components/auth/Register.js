@@ -2,8 +2,12 @@ import React, { Fragment, useState } from "react";  // Require fragment to for h
 // import axios from "axios"; // We will want a redux action to make a request to the back end for login, but we're testig with Axios
 import { Link } from "react-router-dom";
 
+// Connect Register component to REDUX
+import { connect } from "react-redux"; // connect always needs to be exported at the end of file
+// Bring in Action file for setAlert
+import { setAlert } from "../../actions/alert"; // anytime action is imported, to use must be passed into connect
 
-const Register = () => {
+const Register = (props) => {  // PROPS get passed in here -> in this case for setAlert
 
 // ---------------------------------------------------------------
 //-----first parameter formData is this -----
@@ -29,7 +33,10 @@ const Register = () => {
     const onSubmit = async e => {
         e.preventDefault(); // User preventDefault since this is submit
         if(password !== password2) { // due to the useState hook we can access the state from anywhere, curently pulling from the const = formData
-            console.log("Passwords must match!");
+            
+            // console.log("Passwords must match!");
+            props.setAlert("Passwords must match!", "danger");  // danger is the alert type; in css exists alert-danger
+
         }  else {
 
             console.log("SUCCESSSSSssss");
@@ -100,4 +107,6 @@ const Register = () => {
     </Fragment>
 }
 
-export default Register;
+// export default Register;
+// export code above has been updated to (due to importing connect):
+export default connect(null, { setAlert })(Register); // connect takes in 2 parameters 1) any state we want to map(in this case null because we don't want anything atm) 2) object with any actions we want to use ---> this will allow us to use props.setAlert
