@@ -7,10 +7,13 @@ import { connect } from "react-redux"; // connect always needs to be exported at
 // Bring in Action file for setAlert
 import { setAlert } from "../../actions/alert"; // anytime action is imported, to use must be passed into connect
 
+// Bring in register from auth actions
+import { register } from "../../actions/auth"; 
+
 // Import prop types --> below line written with ES7 command [ impt ]
 import PropTypes from 'prop-types';
 
-const Register = ({ setAlert }) => {  // PROPS get passed in here -> in this case for setAlert; Updating props by destructuring it and pulling out setAlert, so below we don't need to write props.setAlert
+const Register = ({ setAlert, register }) => {  // PROPS get passed in here -> in this case for setAlert; Updating props by destructuring it and pulling out setAlert, so below we don't need to write props.setAlert. Added register prop
 
 // ---------------------------------------------------------------
 //-----first parameter formData is this -----
@@ -42,7 +45,8 @@ const Register = ({ setAlert }) => {  // PROPS get passed in here -> in this cas
 
         }  else {
 
-            console.log("SUCCESSSSSssss");
+            register({ name, email, password }); // Takes in object of name, email, password; Pulling them out from component state of 'formData'
+            // console.log("SUCCESSSSSssss");
 
             //-----REGISTER USER VIA AXIOS AND ADD TO MONGODB. CODE REDONE VIA REDUX-----
             // const newUser = { // Create newUser object
@@ -76,10 +80,15 @@ const Register = ({ setAlert }) => {  // PROPS get passed in here -> in this cas
     <p className="lead"><i className="fas fa-user"></i> Create Your Account</p>
     <form className="form" onSubmit={e => onSubmit(e)}>  {/* Get rid of action and replace with onSubmit */}
     <div className="form-group">
-        <input type="text" placeholder="Name" name="name" value={name} onChange={e => onChange(e)} required />  {/* Require onChange handler to type into field; it's possible to call setFormData directly, however in this case we're calling a seperate onChange function */}
+        <input type="text" placeholder="Name" name="name" value={name} onChange={e => onChange(e)} 
+        // required --> TEMP DISABLE FOR SERVER SIDE ERROR CHECKING
+        />  
+        {/* Require onChange handler to type into field; it's possible to call setFormData directly, however in this case we're calling a seperate onChange function */}
     </div>
     <div className="form-group">
-        <input type="email" placeholder="Email Address" name="email" value={email} onChange={e => onChange(e)} required />
+        <input type="email" placeholder="Email Address" name="email" value={email} onChange={e => onChange(e)} 
+        // required --> TEMP DISABLE FOR SERVER SIDE ERROR CHECKING
+        />
         <small className="form-text"
         >This site uses Gravatar so if you want a profile image, use a
         Gravatar email</small>
@@ -89,8 +98,9 @@ const Register = ({ setAlert }) => {  // PROPS get passed in here -> in this cas
         type="password"
         placeholder="Password"
         name="password"
-        minLength="6"
-        value={password} onChange={e => onChange(e)} required
+        // minLength="6"  --> TEMP DISABLE FOR SERVER SIDE ERROR CHECKING
+        value={password} onChange={e => onChange(e)} 
+        // required --> TEMP DISABLE FOR SERVER SIDE ERROR CHECKING
         />
     </div>
     <div className="form-group">
@@ -98,8 +108,9 @@ const Register = ({ setAlert }) => {  // PROPS get passed in here -> in this cas
         type="password"
         placeholder="Confirm Password"
         name="password2"
-        minLength="6"
-        value={password2} onChange={e => onChange(e)} required
+        // minLength="6" --> TEMP DISABLE FOR SERVER SIDE ERROR CHECKING
+        value={password2} onChange={e => onChange(e)} 
+        //required --> TEMP DISABLE FOR SERVER SIDE ERROR CHECKING
         />
     </div>
     <input type="submit" className="btn btn-primary" value="Register" />
@@ -112,9 +123,10 @@ const Register = ({ setAlert }) => {  // PROPS get passed in here -> in this cas
 
 Register.propTypes = {  // Lower-case "p" propTypes and set to object
     // Below "PropTypes.func.isRequired" written with ES7 command [ ptfr ] 'f' function, 'r' is required
-    setAlert: PropTypes.func.isRequired
+    setAlert: PropTypes.func.isRequired, 
+    register: PropTypes.func.isRequired // written with ES7 command [ ptfr ] 'f' function, 'r' is required; add register as prop
 };
 
 // export default Register;
 // export code above has been updated to (due to importing connect):
-export default connect(null, { setAlert })(Register); // connect takes in 2 parameters 1) any state we want to map(in this case null because we don't want anything atm) 2) object with any actions we want to use ---> this will allow us to use props.setAlert
+export default connect(null, { setAlert, register })(Register); // connect takes in 2 parameters 1) any state we want to map(in this case null because we don't want anything atm) 2) object with any actions we want to use ---> this will allow us to use props.setAlert
