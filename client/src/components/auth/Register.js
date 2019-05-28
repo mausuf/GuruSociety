@@ -7,7 +7,10 @@ import { connect } from "react-redux"; // connect always needs to be exported at
 // Bring in Action file for setAlert
 import { setAlert } from "../../actions/alert"; // anytime action is imported, to use must be passed into connect
 
-const Register = (props) => {  // PROPS get passed in here -> in this case for setAlert
+// Import prop types --> below line written with ES7 command [ impt ]
+import PropTypes from 'prop-types';
+
+const Register = ({ setAlert }) => {  // PROPS get passed in here -> in this case for setAlert; Updating props by destructuring it and pulling out setAlert, so below we don't need to write props.setAlert
 
 // ---------------------------------------------------------------
 //-----first parameter formData is this -----
@@ -35,7 +38,7 @@ const Register = (props) => {  // PROPS get passed in here -> in this case for s
         if(password !== password2) { // due to the useState hook we can access the state from anywhere, curently pulling from the const = formData
             
             // console.log("Passwords must match!");
-            props.setAlert("Passwords must match!", "danger");  // danger is the alert type; in css exists alert-danger
+            setAlert("Passwords must match!", "danger");  // danger is the alert type; in css exists alert-danger
 
         }  else {
 
@@ -105,7 +108,12 @@ const Register = (props) => {  // PROPS get passed in here -> in this case for s
     Already have an account? <Link to="/login">Sign In</Link>
     </p>
     </Fragment>
-}
+};
+
+Register.propTypes = {  // Lower-case "p" propTypes and set to object
+    // Below "PropTypes.func.isRequired" written with ES7 command [ ptfr ] 'f' function, 'r' is required
+    setAlert: PropTypes.func.isRequired
+};
 
 // export default Register;
 // export code above has been updated to (due to importing connect):
