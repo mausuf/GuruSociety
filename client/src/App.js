@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'; // Fragment is a ghost element that doesn't show up in dom
+import React, { Fragment, useEffect } from 'react'; // Fragment is a ghost element that doesn't show up in dom; added useEffect hook during auth.js reducer implementation
 import './App.css';
 
 import Navbar from "./components/layout/Navbar";
@@ -13,10 +13,22 @@ import { Provider } from "react-redux"; // react-reduc package combines the two 
 import store from "./store"; 
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"; // Require to import react router since currently landing page is embedded in the App component
+import setAuthToken from './utils/setAuthToken';
+
+import { loadUser } from "./actions/auth"; // loadUser will be dispatched below
+
+if (localStorage.token) { // Copied from reduceders -> auth.js so localstorage is checked everytime App is loaded
+  setAuthToken(localStorage.token);
+}
+
+const App = () => { 
+  
+  useEffect(() => {  // useEffect Hook Documentation @ https://reactjs.org/docs/hooks-effect.html
+    store.dispatch(loadUser()); // We have access to store and call the dispatch method, pass in loadUser
+  }, []); // When the state updates, this will keep updating in a loop, in order for it to run only once when it is mounted we need to a d a second parameter of empty brackets. The brackets is like having a componentDidMount
 
 
-
-const App = () => ( 
+return ( 
 // Wrap entire app in Router to import react router
 <Provider store={store}>
   <Router> 
@@ -33,7 +45,7 @@ const App = () => (
     </Fragment>
   </Router>
 </Provider>
-);
+)};
 
 export default App;
 

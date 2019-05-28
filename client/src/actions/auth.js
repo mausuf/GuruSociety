@@ -3,10 +3,33 @@
 
 //Bring in Axios since we're making backend http request for this action
 import axios from "axios";
-import { REGISTER_SUCCESS, REGISTER_FAIL } from "./types";
+import { REGISTER_SUCCESS, REGISTER_FAIL, USER_LOADED, AUTH_ERROR } from "./types";
 
 // To display an alert for each error
 import { setAlert } from "./alert";
+
+
+// import setAuthToken
+import setAuthToken from "../utils/setAuthToken";
+
+// Load User
+    export const loadUser = () => async dispatch => { // Check to see if there is a token, and if it exists, need to always send it into a global header. (see setAuthToken.js)
+        if(localStorage.token) { // Check local storage in this file as well as mai App.js file
+            setAuthToken(localStorage.token); // This will set the header with the Token if it exists
+        }
+        
+        // After the header is set with the token, now make request via try catch
+        try {       
+            const res = await axios.get("/api/auth");
+            // If everything works, load the user
+            dispatch({
+                type: USER_LOADED,
+                payload: res.data  //payload is the data sent from api/auth which is the USER
+            })
+        } catch(err) {
+            dispatch({ AUTH_ERROR });
+        }
+    };
 
 
 // Register User

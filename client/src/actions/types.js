@@ -7,3 +7,7 @@ export const REMOVE_ALERT = "REMOVE_ALERT";
 // Now working with http request and dealing with the backend. Alerts were not dealing with the backend. The place to do axios request to the back end will happen in the ACTION file --> in this case the auth actions file. (reducer -> auth.js)
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
 export const REGISTER_FAIL = "REGISTER_FAIL";
+
+// The whole process: 1) Take the token that is stored 2) send it to backend for validation 3) Loading the user 4) steps 1-3 needs to happen everytime the main App component is loaded
+export const USER_LOADED = "USER_LOADED";
+export const AUTH_ERROR = "AUTH_ERROR";
