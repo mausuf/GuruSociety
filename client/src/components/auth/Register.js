@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from "react";  // Require fragment to for html; useState is a hook since we're using a functional component for Register
-import axios from "axios"; // We will want a redux action to make a request to the back end for login, but we're testig with Axios
+// import axios from "axios"; // We will want a redux action to make a request to the back end for login, but we're testig with Axios
+import { Link } from "react-router-dom";
 
 
 const Register = () => {
@@ -30,27 +31,32 @@ const Register = () => {
         if(password !== password2) { // due to the useState hook we can access the state from anywhere, curently pulling from the const = formData
             console.log("Passwords must match!");
         }  else {
-            const newUser = { // Create newUser object
-                name,
-                email,
-                password
-            } 
-            console.log(formData);
+
+            console.log("SUCCESSSSSssss");
+
+            //-----REGISTER USER VIA AXIOS AND ADD TO MONGODB. CODE REDONE VIA REDUX-----
+            // const newUser = { // Create newUser object
+            //     name,
+            //     email,
+            //     password
+            // } 
+            // console.log(formData);
         
         
-            // Since we're sending data, create config object that contains headers object
-            try {
-                const config = {
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                }
-                const body = JSON.stringify(newUser);
-                const res = await axios.post("/api/users", body, config); // axios returns a promise; axios makes a post request to api/users sending name, email, and password. This will add it to mongoDB and return a token!; using /api/users because we added the PROXY; second parameter is the data in the body; third parameter is the config that has the HEADER value.
-                console.log(res.data); // res.data is the TOKEN!
-            } catch(err) {
-                console.error(err.response.data);
-            }
+            // // Since we're sending data, create config object that contains headers object
+            // try {
+            //     const config = {
+            //         headers: {
+            //             "Content-Type": "application/json"
+            //         }
+            //     }
+            //     const body = JSON.stringify(newUser);
+            //     const res = await axios.post("/api/users", body, config); // axios returns a promise; axios makes a post request to api/users sending name, email, and password. This will add it to mongoDB and return a token!; using /api/users because we added the PROXY; second parameter is the data in the body; third parameter is the config that has the HEADER value.
+            //     console.log(res.data); // res.data is the TOKEN!
+            // } catch(err) {
+            //     console.error(err.response.data);
+            // }
+            //----------------------------------------------------------------------------
         }
      };
 
@@ -89,9 +95,9 @@ const Register = () => {
     <input type="submit" className="btn btn-primary" value="Register" />
     </form>
     <p className="my-1">
-    Already have an account? <a href="login.html">Sign In</a>
+    Already have an account? <Link to="/login">Sign In</Link>
     </p>
     </Fragment>
 }
 
-export default Register
+export default Register;
