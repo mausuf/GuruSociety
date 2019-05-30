@@ -1,17 +1,18 @@
+// eslint-disable-next-line react-hooks/exhaustive-deps
 // ---------------------------
 // Similar to CreateProfile.js --> copied as boiler plate
 // ---------------------------
 
-import React, { useState, Fragment } from 'react'; // Each input field will be a piece of state, so bring in useState Hook
+import React, { useState, Fragment, useEffect } from 'react'; // Each input field will be a piece of state, so bring in useState Hook
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 
 // Implementing profile action
-import { createProfile } from "../../actions/profile"; // Fixed this to lowercase "c"
+import { createProfile, getCurrentProfile } from "../../actions/profile"; // Fixed this to lowercase "c"
 import { Link, withRouter} from "react-router-dom"; // To use HISTORY object, require withRouter to be able to redirect from the action
 
 
-const CreateProfile = ({ createProfile, history }) => {  //Form Data State; Want to call the { createProfile } on submit; destructure history by pulling it out of props
+const EditProfile = ({ profile: {profile, loading}, createProfile, getCurrentProfile, history }) => {  //Form Data State; Want to call the { editProfile } on submit; destructure history by pulling it out of props
     const [formData, setFormData] = useState({
         company: "",
         website: "",
@@ -28,7 +29,28 @@ const CreateProfile = ({ createProfile, history }) => {  //Form Data State; Want
     });
 
     // This is for hiding the social inputs until they are toggled by the user
-    const [displaySocialInputs, toggleSocialInputs] = useState(false); // default is false since we want it to be a boolean 
+    const [displaySocialInputs, toggleSocialInputs] = useState(false); // default is false since we want it to be a boolean
+
+    useEffect(() => {
+        getCurrentProfile(); //
+
+        setFormData({  // Checks e.g. company part of form data: if it IS loading or if NO profile company THEN have a blank field; else if its NOT loading or there IS profile company THEN fill it
+            company: loading || !profile.company ? '' : profile.company,
+            website: loading || !profile.website ? '' : profile.website,
+            location: loading || !profile.location ? '' : profile.location,
+            status: loading || !profile.status ? '' : profile.status,
+            skills: loading || !profile.skills ? '' : profile.skills.join(','),
+            githubusername:
+              loading || !profile.githubusername ? '' : profile.githubusername,
+            bio: loading || !profile.bio ? '' : profile.bio,
+            twitter: loading || !profile.social ? '' : profile.social.twitter,  // for social items, need to check if the social object exists in the data
+            facebook: loading || !profile.social ? '' : profile.social.facebook,
+            linkedin: loading || !profile.social ? '' : profile.social.linkedin,
+            youtube: loading || !profile.social ? '' : profile.social.youtube,
+            instagram: loading || !profile.social ? '' : profile.social.instagram
+          });
+    
+    }, [loading]); // useEffect will keep reloading so [] with prop of loading -> so when it loads this is when it will run
 
     const { // Destructure the above so these can use these as variables
         company,
@@ -51,7 +73,7 @@ const CreateProfile = ({ createProfile, history }) => {  //Form Data State; Want
     // call createProfile on submit
     const onSubmit = e => {
         e.preventDefault();
-        createProfile(formData, history); // submitting all the fields in the formData state
+        createProfile(formData, history, true); // submitting all the fields in the formData state; Add edit paramenter by adding True because this is an edit
     }
 
     return (
@@ -164,14 +186,22 @@ const CreateProfile = ({ createProfile, history }) => {  //Form Data State; Want
 
         
         <input type="submit" className="btn btn-primary my-1" />
-        <a className="btn btn-light my-1" href="dashboard.html">Go Back</a>
+        <Link className="btn btn-light my-1" to="/dashboard">Go Back to Dashboard</Link>
       </form>
         </Fragment>
     )
 };
 
-CreateProfile.propTypes = {
+EditProfile.propTypes = {
     createProfile: PropTypes.func.isRequired, // ES7 [ ptfr ]
+    getCurrentProfile: PropTypes.func.isRequired,  // Action for getCurrentProfile
+    profile: PropTypes.object.isRequired, //ES7 [ ptor ]
 };
 
-export default connect(null, { createProfile })(withRouter(CreateProfile));
+const mapStateToProps = state => ({
+    profile: state.profile
+});
+
+export default connect(mapStateToProps, 
+{ createProfile, getCurrentProfile }
+)(withRouter(EditProfile));
