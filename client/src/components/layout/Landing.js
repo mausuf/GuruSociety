@@ -1,7 +1,15 @@
 import React from 'react';
-import { Link } from "react-router-dom"; // In order links via react router (and not have links automatically goto .html) need to import react-router-dom and apply to links below
+import { Link, Redirect } from "react-router-dom"; // In order links via react router (and not have links automatically goto .html) need to import react-router-dom and apply to links below
 
-const Landing = () => {
+import { connect } from "react-redux" // Need this to interact with state to see if we're logged in. This is so user is not able to visit the Landing page AFTER they've logged in
+import PropTypes from 'prop-types'
+
+
+const Landing = ({ isAuthenticated }) => {
+  if(isAuthenticated) {
+    return <Redirect to="/dashboard" />
+  }
+
     return (
         <section className="landing">
         <div className="dark-overlay">
@@ -21,4 +29,12 @@ const Landing = () => {
     )
 }
 
-export default Landing
+Landing.propTypes = {
+  isAuthenticated: PropTypes.bool, // [ES7 ptb ]
+}
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+})
+
+export default connect(mapStateToProps)(Landing);
