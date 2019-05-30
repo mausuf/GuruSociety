@@ -10,6 +10,7 @@ import Alert from "./components/layout/Alert";
 
 // Dashboard Component
 import Dashboard from "./components/dashboard/Dashboard";
+import PrivateRoute from "./components/routing/PrivateRoute";
 
 // Redux
 import { Provider } from "react-redux"; // react-reduc package combines the two together by the Provider. So we need to wrap everything in provider, just like Router
@@ -43,7 +44,7 @@ return (
       <Switch> {/* Switch can ONLY contain routes */}
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/dashboard" component={Dashboard} />
+          <PrivateRoute exact path="/dashboard" component={Dashboard} />  {/* Ensure you have a SWITCH for this to work. This will use PrivateRoute so users can't type in /dashboard AFTER logging out and be able to access it! Now for any route we want the user to be logged in for, we can use PRIVATEROUTE instead of normal ROUTE */}
       </Switch>
       </section>
     </Fragment>
