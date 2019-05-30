@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 
 
-const CreateProfile = props => {
+const CreateProfile = props => {  //Form Data State
     const [formData, setFormData] = useState({
         company: "",
         website: "",
@@ -21,6 +21,9 @@ const CreateProfile = props => {
         youtube: "",
         instagram: ""
     });
+
+    // This is for hiding the social inputs until they are toggled by the user
+    const [displaySocialInputs, toggleSocialInputs] = useState(false) // default is false since we want it to be a boolean 
 
     const { // Destructure the above so these can use these as variables
         company,
@@ -106,13 +109,16 @@ const CreateProfile = props => {
         </div>
 
         <div className="my-2">
-          <button type="button" className="btn btn-light">
+                {/* If it's true then want to set to false or if false set it to true ---> so toggleSocialInputs to be whatever displaySocialInputs is NOT --> to get the opposite */}
+          <button onClick={() => toggleSocialInputs(!displaySocialInputs)} type="button" className="btn btn-light">
             Add Social Network Links
           </button>
           <span>Optional</span>
         </div>
 
-        <div className="form-group social-input">
+        {/* if displaySocialInputs is TRUE, then show Fragment with all social input */}
+        {displaySocialInputs && <Fragment>
+            <div className="form-group social-input">
           <i className="fab fa-twitter fa-2x"></i>
           <input type="text" placeholder="Twitter URL" name="twitter" />
         </div>
@@ -136,15 +142,18 @@ const CreateProfile = props => {
           <i className="fab fa-instagram fa-2x"></i>
           <input type="text" placeholder="Instagram URL" name="instagram" />
         </div>
+        </Fragment>}
+
+        
         <input type="submit" className="btn btn-primary my-1" />
         <a className="btn btn-light my-1" href="dashboard.html">Go Back</a>
       </form>
         </Fragment>
     )
-}
+};
 
 CreateProfile.propTypes = {
 
-}
+};
 
-export default CreateProfile
+export default CreateProfile;
