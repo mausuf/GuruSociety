@@ -9,6 +9,7 @@ import { logout } from "../../actions/auth";
 const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {  // Add props to parameters -> Destructure and pull out isAuthenticated & loading(to make sure user is done loading before links are put in). Need the logout action as well
   const authLinks = (
     <ul>
+    <li><Link to="/dashboard"><i className="fas fa-user" />{" "}<span className="hide-sm">Dashboard</span></Link></li>
     <li><a onClick={logout} href="#!">
     <i className="fas fa-sign out-alt"></i>{" "}   {/* Added quotes to add space; Written by typing: i.fas.fa-sign.out-alt; this is using FONTAWESOME ICON */}
     <span className="hide-sm">Logout</span></a></li>  {/* hide-sm hides the word Logout on small mobile screen */}
