@@ -1,5 +1,5 @@
 /* eslint-disable default-case */
-import { REGISTER_SUCCESS, REGISTER_FAIL, USER_LOADED, AUTH_ERROR } from "../actions/types";
+import { REGISTER_SUCCESS, REGISTER_FAIL, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL } from "../actions/types";
 
 // Initial state will be an object containing TOKEN. Token will be stored in LOCAL STORAGE
 const initialState = {
@@ -20,7 +20,8 @@ export default function(state = initialState, action) { // Takes in 1) Initial s
                 loading: false,
                 user: payload
             }
-        case REGISTER_SUCCESS: // We get the token back so get user logged in right away. 
+        case REGISTER_SUCCESS: // We get the token back so get user logged in right away.
+        case LOGIN_SUCCESS: // This will do the same as register_success 
             localStorage.setItem("token", payload.token); //payload is an object
             return {
                 ...state, // spread operator state will show what ever is in state since state is immutable
@@ -30,6 +31,7 @@ export default function(state = initialState, action) { // Takes in 1) Initial s
             }
         case REGISTER_FAIL:
         case AUTH_ERROR: // Writing AUTH_ERROR like this will do the SAME THING as REGISTER_FAIL; Logout and Login fail will also do this. We never want a non-valid token in local storage.
+        case LOGIN_FAIL: 
             localStorage.removeItem("token"); // remove token completely
             return {
                 ...state,

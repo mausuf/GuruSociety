@@ -2,8 +2,12 @@ import React, { Fragment, useState } from "react";  // Require fragment to for h
 // import axios from "axios"; // We will want a redux action to make a request to the back end for login, but we're testig with Axios
 import { Link } from "react-router-dom";
 
+// These 3 below are needed to fire off the login actions (LOGIN_SUCCESS, LOGIN_FAIL)
+import { connect } from "react-redux";
+import { login } from "../../actions/auth";
+import PropTypes from "prop-types";
 
-const Login = () => {
+const Login = ({ login }) => { // Destructure { login } by passing it in to pull out login from props, to avoid props.login
 
 // ---------------------------------------------------------------
 //-----first parameter formData is this -----
@@ -26,7 +30,9 @@ const Login = () => {
 
     const onSubmit = async e => {
         e.preventDefault(); // User preventDefault since this is submit
-            console.log("SUCCEsssSSSsss");
+        login(email, password);
+            // console.log("SUCCEsssSSSsss");
+        
      };
 
   // ---------------------------------------------------------------  
@@ -57,4 +63,7 @@ const Login = () => {
     </Fragment>
 }
 
-export default Login;
+Login.propTypes = {
+    login: PropTypes.func.isRequired, // written with ES7 [ ptfr ]
+}
+export default connect(null, { login })(Login); // For now pass in null for map state to props*; for actions { login }

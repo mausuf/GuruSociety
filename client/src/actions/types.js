@@ -11,3 +11,6 @@ export const REGISTER_FAIL = "REGISTER_FAIL";
 // The whole process: 1) Take the token that is stored 2) send it to backend for validation 3) Loading the user 4) steps 1-3 needs to happen everytime the main App component is loaded
 export const USER_LOADED = "USER_LOADED";
 export const AUTH_ERROR = "AUTH_ERROR";
+
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAIL = "LOGIN_FAIL";

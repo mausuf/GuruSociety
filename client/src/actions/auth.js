@@ -3,7 +3,7 @@
 
 //Bring in Axios since we're making backend http request for this action
 import axios from "axios";
-import { REGISTER_SUCCESS, REGISTER_FAIL, USER_LOADED, AUTH_ERROR } from "./types";
+import { REGISTER_SUCCESS, REGISTER_FAIL, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL } from "./types";
 
 // To display an alert for each error
 import { setAlert } from "./alert";
@@ -51,6 +51,8 @@ export const register = ({ name, email, password }) => async dispatch => { // Ob
             payload: res.data // Data that we get back, in this case the TOKEN
          });
 
+         dispatch(loadUser()); // Added this so it runs immediately
+
     } catch(err) {
         const errors = err.response.data.errors  // the array is called errors (.errors)
 
@@ -64,3 +66,36 @@ export const register = ({ name, email, password }) => async dispatch => { // Ob
     }
 };
 // Now go to Components/auth/Register.js to bring in Register from the auth actions.
+
+
+// Login User       --> Boiler plate taken from Register User (from above)
+export const login = ( email, password ) => async dispatch => { // Object takes in name, email, and password; don't need curly braces to make it an object since we're taking in only 2 parameeters
+    
+    const config = {
+        headers: {"Content-Type": "application/json"}  // Data to send (string)
+    }
+
+    const body = JSON.stringify({ email, password }); // Preparing the data to send -> create an object from the initial email and password
+
+    try {
+        const res = await axios.post("/api/auth", body, config);  //response ; post request to api/AUTH and body & config
+
+        dispatch({ 
+            type: LOGIN_SUCCESS,
+            payload: res.data // Send the data as the payload
+         });
+
+         dispatch(loadUser()); // Added this so it runs immediately
+
+    } catch(err) {
+        const errors = err.response.data.errors  // the array is called errors (.errors)
+
+        if(errors) {
+            errors.forEach(error  => dispatch(setAlert(error.msg, "danger")));  
+        };
+
+        dispatch({
+            type: LOGIN_FAIL
+        });
+    }
+};
