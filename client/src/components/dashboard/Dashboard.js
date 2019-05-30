@@ -1,20 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 //created next 16 lines with ES7 [ racfp ]
-import React, { useEffect } from 'react'; // Bring in useEffect because using Hooks
+import React, { Fragment, useEffect } from 'react'; // Bring in useEffect because using Hooks
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import { getCurrentProfile } from "../../actions/profile"
+import { getCurrentProfile } from "../../actions/profile";
 
-const Dashboard = ({ getCurrentProfile, auth, profile }) => {   // Destructure props since we NEED getCurrentProfile, split into 3, won't work otherwise.
+// Loading GIF
+import Spinner from "../layout/Spinner";
+
+const Dashboard = ({ getCurrentProfile, auth, profile: { profile, loading } }) => {   // Destructure props since we NEED getCurrentProfile, split into 3, won't work otherwise; For Loading GIF, pull out profile and loading state from profile
     useEffect(() => {
         getCurrentProfile();
     }, []); // put empty set of brackets since this only needs to run ONCE
 
-    return (
-        <div>
-            Dashboard
-        </div>
-    )
+    return loading && profile === null ? <Spinner /> : <Fragment>Testing</Fragment>  // If the profile is null and still loading, THEN show spinner, ELSE bring in Fragment
 };
 
 Dashboard.propTypes = {
