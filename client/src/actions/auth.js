@@ -3,7 +3,7 @@
 
 //Bring in Axios since we're making backend http request for this action
 import axios from "axios";
-import { REGISTER_SUCCESS, REGISTER_FAIL, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL } from "./types";
+import { REGISTER_SUCCESS, REGISTER_FAIL, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } from "./types";
 
 // To display an alert for each error
 import { setAlert } from "./alert";
@@ -99,3 +99,8 @@ export const login = ( email, password ) => async dispatch => { // Object takes 
         });
     }
 };
+
+// Logout User / Clear Profile
+export const logout = () => dispatch => {
+    dispatch({ type: LOGOUT });
+}
