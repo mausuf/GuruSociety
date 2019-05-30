@@ -1,13 +1,13 @@
 import React, { Fragment, useState } from "react";  // Require fragment to for html; useState is a hook since we're using a functional component for Register
 // import axios from "axios"; // We will want a redux action to make a request to the back end for login, but we're testig with Axios
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";  // Add Redirect for redirecting after successful Login
 
 // These 3 below are needed to fire off the login actions (LOGIN_SUCCESS, LOGIN_FAIL)
 import { connect } from "react-redux";
 import { login } from "../../actions/auth";
 import PropTypes from "prop-types";
 
-const Login = ({ login }) => { // Destructure { login } by passing it in to pull out login from props, to avoid props.login
+const Login = ({ login, isAuthenticated }) => { // Destructure { login } by passing it in to pull out login from props, to avoid props.login
 
 // ---------------------------------------------------------------
 //-----first parameter formData is this -----
@@ -34,6 +34,11 @@ const Login = ({ login }) => { // Destructure { login } by passing it in to pull
             // console.log("SUCCEsssSSSsss");
         
      };
+
+     // Redirect to dashboard if Logged In successfully
+     if(isAuthenticated) {
+         return <Redirect to="/dashboard" /> // This route does not yet exist at time of writing, but will be needed.
+     }
 
   // ---------------------------------------------------------------  
     return <Fragment>
@@ -63,7 +68,16 @@ const Login = ({ login }) => { // Destructure { login } by passing it in to pull
     </Fragment>
 }
 
+
+
 Login.propTypes = {
     login: PropTypes.func.isRequired, // written with ES7 [ ptfr ]
-}
-export default connect(null, { login })(Login); // For now pass in null for map state to props*; for actions { login }
+    isAuthenticated: PropTypes.bool, // boolean; ES7 [ ptb ] --> bring this prop up to 'const Login'
+};
+
+const mapStateToProps = state => ({ // Bring in the AUTH state because it has the isAuthenticated; this has only been done previously when making Alerts; 
+    //auth: state.auth  --> // this SAMPLE FUNCTIONwithout the .isAuthenticated this function will give us items from REDUCER labeled token, isAuthenticated, loading, user. All is needed is: isAuthenticated
+    isAuthenticated: state.auth.isAuthenticated
+})  
+
+export default connect(mapStateToProps, { login })(Login); // Add in mapStateToProps; for actions { login }

@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";  // Require fragment to for html; useState is a hook since we're using a functional component for Register
 // import axios from "axios"; // We will want a redux action to make a request to the back end for login, but we're testig with Axios
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 // Connect Register component to REDUX
 import { connect } from "react-redux"; // connect always needs to be exported at the end of file
@@ -13,7 +13,7 @@ import { register } from "../../actions/auth";
 // Import prop types --> below line written with ES7 command [ impt ]
 import PropTypes from 'prop-types';
 
-const Register = ({ setAlert, register }) => {  // PROPS get passed in here -> in this case for setAlert; Updating props by destructuring it and pulling out setAlert, so below we don't need to write props.setAlert. Added register prop
+const Register = ({ setAlert, register, isAuthenticated }) => {  // PROPS get passed in here -> in this case for setAlert; Updating props by destructuring it and pulling out setAlert, so below we don't need to write props.setAlert. Added register prop
 
 // ---------------------------------------------------------------
 //-----first parameter formData is this -----
@@ -74,6 +74,11 @@ const Register = ({ setAlert, register }) => {  // PROPS get passed in here -> i
         }
      };
 
+     // To be redirected to dashboard after REGISTRATION
+     if(isAuthenticated) {
+         return <Redirect to="/dashboard" />
+     };
+
   // ---------------------------------------------------------------  
     return <Fragment>
     <h1 className="large text-primary">Sign Up</h1>
@@ -124,9 +129,17 @@ const Register = ({ setAlert, register }) => {  // PROPS get passed in here -> i
 Register.propTypes = {  // Lower-case "p" propTypes and set to object
     // Below "PropTypes.func.isRequired" written with ES7 command [ ptfr ] 'f' function, 'r' is required
     setAlert: PropTypes.func.isRequired, 
-    register: PropTypes.func.isRequired // written with ES7 command [ ptfr ] 'f' function, 'r' is required; add register as prop
+    register: PropTypes.func.isRequired, // written with ES7 command [ ptfr ] 'f' function, 'r' is required; add register as prop
+    isAuthenticated: PropTypes.bool
 };
+
+
+const mapStateToProps = state => ({ // Bring in the AUTH state because it has the isAuthenticated; this has only been done previously when making Alerts; 
+    //auth: state.auth  --> // this SAMPLE FUNCTIONwithout the .isAuthenticated this function will give us items from REDUCER labeled token, isAuthenticated, loading, user. All is needed is: isAuthenticated
+    isAuthenticated: state.auth.isAuthenticated
+})  
+
 
 // export default Register;
 // export code above has been updated to (due to importing connect):
-export default connect(null, { setAlert, register })(Register); // connect takes in 2 parameters 1) any state we want to map(in this case null because we don't want anything atm) 2) object with any actions we want to use ---> this will allow us to use props.setAlert
+export default connect(mapStateToProps, { setAlert, register })(Register); // connect takes in 2 parameters 1) any state we want to map(in this case null because we don't want anything atm) 2) object with any actions we want to use ---> this will allow us to use props.setAlert
