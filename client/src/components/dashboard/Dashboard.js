@@ -8,12 +8,22 @@ import { getCurrentProfile } from "../../actions/profile";
 // Loading GIF
 import Spinner from "../layout/Spinner";
 
-const Dashboard = ({ getCurrentProfile, auth, profile: { profile, loading } }) => {   // Destructure props since we NEED getCurrentProfile, split into 3, won't work otherwise; For Loading GIF, pull out profile and loading state from profile
+import { Link } from "react-router-dom";
+
+const Dashboard = ({ getCurrentProfile, auth: { user }, profile: { profile, loading } }) => {   // Destructure props since we NEED getCurrentProfile, split into 3, won't work otherwise; For Loading GIF, pull out profile and loading state from profile
     useEffect(() => {
         getCurrentProfile();
     }, []); // put empty set of brackets since this only needs to run ONCE
 
-    return loading && profile === null ? <Spinner /> : <Fragment>Testing</Fragment>  // If the profile is null and still loading, THEN show spinner, ELSE bring in Fragment
+    // If the profile is null and still loading, THEN show spinner, ELSE bring in Fragment(if user exists, show user name)
+    return loading && profile === null ? ( <Spinner /> ) : ( <Fragment> 
+        <h1 className="large text-primary">Dashboard</h1>
+        <p className="lead">
+        <i className="fas fa-user"></i>Welcome! { user && user.name }</p>
+        {/* Check to see if profile is NOT = to Null, put Fragment, ELSE other Fragment */}
+        { profile !==null ? ( <Fragment>User has Profile</Fragment> ) : ( <Fragment><p>You do not have a profile setup yet, please create one</p><Link to="/create-profile" className="btn btn-primary my-1">Create Profile Here :D</Link> </Fragment> ) }
+    </Fragment>  
+    );
 };
 
 Dashboard.propTypes = {

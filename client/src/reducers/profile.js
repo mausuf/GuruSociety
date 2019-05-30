@@ -1,5 +1,5 @@
 /* eslint-disable default-case */
-import { GET_PROFILE, PROFILE_ERROR } from "../actions/types";
+import { GET_PROFILE, PROFILE_ERROR, CLEAR_PROFILE } from "../actions/types";
 
 const initialState = {   // initialState Get profile, create, update, clear from state
     profile: null,       // When getting logged in, profile will make a req and get all of the user's profile data, as well as other user's profile data when visiting them
@@ -24,6 +24,13 @@ export default function(state = initialState, action) {
                 ...state,
                 error: payload, // Add error which is the payload, sending object with the message with status
                 loading: false
+            }
+        case CLEAR_PROFILE:
+            return {
+                ...state,   
+                profile: null,  // Clear profile
+                repos: [],  // Set repos back to empty
+                loading:false
             }
         default:
             return state;

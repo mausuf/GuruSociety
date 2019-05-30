@@ -22,3 +22,6 @@ export const LOGOUT = "LOGOUT";
 // Profile
 export const GET_PROFILE = "GET_PROFILE";
 export const PROFILE_ERROR = "PROFILE_ERROR";
+
+// Clear Profile on Logout, so if multiple users login and logout, it clears the state of the OLD user (without having to reload the webpage)
+export const CLEAR_PROFILE = "CLEAR_PROFILE";
