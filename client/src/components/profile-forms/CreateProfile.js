@@ -5,8 +5,12 @@ import React, { useState, Fragment } from 'react'; // Each input field will be a
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 
+// Implementing profile action
+import { createProfile } from "../../actions/profile"; // Fixed this to lowercase "c"
+import { Link, withRouter} from "react-router-dom"; // To use HISTORY object, require withRouter to be able to redirect from the action
 
-const CreateProfile = props => {  //Form Data State
+
+const CreateProfile = ({ createProfile, history }) => {  //Form Data State; Want to call the { createProfile } on submit; destructure history by pulling it out of props
     const [formData, setFormData] = useState({
         company: "",
         website: "",
@@ -23,7 +27,7 @@ const CreateProfile = props => {  //Form Data State
     });
 
     // This is for hiding the social inputs until they are toggled by the user
-    const [displaySocialInputs, toggleSocialInputs] = useState(false) // default is false since we want it to be a boolean 
+    const [displaySocialInputs, toggleSocialInputs] = useState(false); // default is false since we want it to be a boolean 
 
     const { // Destructure the above so these can use these as variables
         company,
@@ -43,6 +47,12 @@ const CreateProfile = props => {  //Form Data State
     // Need object with rest of the formData, e.target.name(is KEY); e.target.value is VALUE which will change it in the state
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
+    // call createProfile on submit
+    const onSubmit = e => {
+        e.preventDefault();
+        createProfile(formData, history); // submitting all the fields in the formData state
+    }
+
     return (
         <Fragment>
       <h1 className="large text-primary">
@@ -53,7 +63,8 @@ const CreateProfile = props => {  //Form Data State
         profile stand out
       </p>
       <small>* = required field</small>
-      <form className="form">
+                                {/* Add onSubmit to run so it sends formData */}
+      <form className="form" onSubmit={e => onSubmit(e)} > 
         <div className="form-group">
         {/* All inputs will have the onChange --> Because whatever is the value in the text field or select list will get put in that part of the state of the form data */}
           <select name="status" value={status} onChange={e => onChange(e)} >  
@@ -159,7 +170,7 @@ const CreateProfile = props => {  //Form Data State
 };
 
 CreateProfile.propTypes = {
-
+    createProfile: PropTypes.func.isRequired, // ES7 [ ptfr ]
 };
 
-export default CreateProfile;
+export default connect(null, { createProfile })(withRouter(CreateProfile));
