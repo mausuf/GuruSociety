@@ -8,6 +8,9 @@ import Login from "./components/auth/Login";
 // Alert Warning Component
 import Alert from "./components/layout/Alert";
 
+// Dashboard Component
+import Dashboard from "./components/dashboard/Dashboard";
+
 // Redux
 import { Provider } from "react-redux"; // react-reduc package combines the two together by the Provider. So we need to wrap everything in provider, just like Router
 import store from "./store"; 
@@ -40,6 +43,7 @@ return (
       <Switch> {/* Switch can ONLY contain routes */}
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/dashboard" component={Dashboard} />
       </Switch>
       </section>
     </Fragment>
