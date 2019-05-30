@@ -3,7 +3,8 @@ import { setAlert } from "./alert";
 
 import {
     GET_PROFILE,
-    PROFILE_ERROR
+    PROFILE_ERROR, 
+    UPDATE_PROFILE,
 } from "./types";
 
 // Get the current user's profile
@@ -56,4 +57,71 @@ export const createProfile = (formData, history, edit = false) => async dispatch
             payload: { msg: err.response.statusText, status: err.response.status } // .statusText gets the message text
         });
     }
-} 
+};
+
+
+// Add Experience
+export const addExperience = (formData, history) => async dispatch => {     // take in formDatal; history to redirect to dashboard after adding experience
+
+    try {
+        const config = {  // Since sending data we need config object
+            headers: {
+                "Content-Type": "application/json" 
+            }
+        }
+        const res = await axios.put("/api/profile/experience", formData, config) // PUT request to create/update experience which is /api/profile/experience
+
+        dispatch({ // This will dispatch to reducer
+            type: UPDATE_PROFILE,
+            payload: res.data  // res.data will be the profile
+        });
+
+        dispatch(setAlert("Experience Added!", "success")); // If edit is true THEN Profile Updated ELSE Profile Created; success makes the alert GREEN color
+            history.push("/dashboard");
+
+    } catch (err) {
+        // Validation Errors in an Alert, next 3 lines copied from auth.js
+        const errors = err.response.data.errors;  // the array is called errors (.errors)
+        if(errors) {
+            errors.forEach(error  => dispatch(setAlert(error.msg, "danger")));  
+        };
+
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status } // .statusText gets the message text
+        });
+    }
+};
+
+// Add Education
+export const addEducation = (formData, history) => async dispatch => {     // take in formDatal; history to redirect to dashboard after adding education
+
+    try {
+        const config = {  // Since sending data we need config object
+            headers: {
+                "Content-Type": "application/json" 
+            }
+        }
+        const res = await axios.put("/api/profile/education", formData, config) // PUT request to create/update education which is /api/profile/education
+
+        dispatch({ // This will dispatch to reducer
+            type: UPDATE_PROFILE,
+            payload: res.data  // res.data will be the profile
+        });
+
+        dispatch(setAlert("Education Added!", "success")); // If edit is true THEN Profile Updated ELSE Profile Created; success makes the alert GREEN color
+            history.push("/dashboard");
+
+    } catch (err) {
+        // Validation Errors in an Alert, next 3 lines copied from auth.js
+        const errors = err.response.data.errors;  // the array is called errors (.errors)
+        if(errors) {
+            errors.forEach(error  => dispatch(setAlert(error.msg, "danger")));  
+        };
+
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status } // .statusText gets the message text
+        });
+    }
+};
