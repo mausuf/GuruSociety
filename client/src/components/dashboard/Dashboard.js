@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 
 // Inserting DashboardActions into Dashboard
 import DashboardActions from "../dashboard/DashboardActions";
+import Experience from "./Experience";
 
 const Dashboard = ({ getCurrentProfile, auth: { user }, profile: { profile, loading } }) => {   // Destructure props since we NEED getCurrentProfile, split into 3, won't work otherwise; For Loading GIF, pull out profile and loading state from profile
     useEffect(() => {
@@ -28,6 +29,8 @@ const Dashboard = ({ getCurrentProfile, auth: { user }, profile: { profile, load
         <Fragment>User has Profile
             {/* No need to pass any props into DashboardActions */}
             <DashboardActions />
+            {/* Need to pass in only experiences, access profile from state 'const Dashboard' from above */}
+            <Experience experience={profile.experience} />
         </Fragment> 
         ) : ( 
         <Fragment><p>You do not have a profile setup yet, please create one</p><Link to="/create-profile" className="btn btn-primary my-1">Create Profile Here :D</Link> </Fragment> ) }
