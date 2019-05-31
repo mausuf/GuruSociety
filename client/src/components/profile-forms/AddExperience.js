@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { addExperience } from "../../actions/profile";
 import { Link, withRouter } from "react-router-dom"; // Because redirecting from actions file
-
-const AddExperience = props => {
-
+                        //Add in props for onSubmit form
+const AddExperience = ({ addExperience, history }) => {
+     
     const [formData, setFormData] = useState({ // Using useState Hook instead of classes due to less code
         company: "",
         title: "",
@@ -36,7 +36,12 @@ const AddExperience = props => {
         positions that you have had in the past
       </p>
       <small>* = required field</small>
-      <form class="form">
+      {/* onSubmit ---> call Action of addExperience which takes in formData, and redirect which is history which is part of props */}
+      <form class="form" 
+          onSubmit={e => {
+          e.preventDefault();
+          addExperience(formData, history);
+      }} >
         <div class="form-group">
           <input type="text" placeholder="* Job Title" name="title" required value={title} onChange={e => onChange(e)} />
         </div>
