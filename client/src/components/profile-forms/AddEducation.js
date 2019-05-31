@@ -2,26 +2,26 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import { addExperience } from "../../actions/profile";
+import { addEducation } from "../../actions/profile";
 import { Link, withRouter } from "react-router-dom"; // Because redirecting from actions file
                         //Add in props for onSubmit form
-const AddExperience = ({ addExperience, history }) => {
+const AddEducation = ({ addEducation, history }) => {
      
     const [formData, setFormData] = useState({ // Using useState Hook instead of classes due to less code
-        company: "",
-        title: "",
-        location: "",
+        school: "",
+        degree: "",
+        fieldofstudy: "",
         from: "",
         to: "",  // Have this disabled if 'Current' (currently working) is true. 
         current: false,
         description: ""
-    });s
+    });
 
     // This state will be disabled via toggleDisabled, the DEFAULT of this state is False
     const [toDateDisabled, toggleDisabled] = useState(false);
 
     //Destructure formData
-    const { company, title, location, from, to, current, description } = formData;
+    const { school, degree, fieldofstudy, from, to, current, description } = formData;
 
     // Same as the rest of the onChanges; pass in the object state with the current formData with key as the value of the target
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,27 +29,26 @@ const AddExperience = ({ addExperience, history }) => {
     return (
     <Fragment>
       <h1 class="large text-primary">
-       Add An Experience
+       Add Your Education
       </h1>
       <p class="lead">
-        <i class="fas fa-code-branch"></i> Add any developer/programming
-        positions that you have had in the past
+        <i class="fas fa-code-branch"></i> Add any school or bootcamp that you have attended
       </p>
       <small>* = required field</small>
       {/* onSubmit ---> call Action of addExperience which takes in formData, and redirect which is history which is part of props */}
       <form class="form" 
           onSubmit={e => {
           e.preventDefault();
-          addExperience(formData, history);
+          addEducation(formData, history);
       }} >
         <div class="form-group">
-          <input type="text" placeholder="* Job Title" name="title" required value={title} onChange={e => onChange(e)} />
+          <input type="text" placeholder="* School/Bootcamp" name="school" required value={school} onChange={e => onChange(e)} />
         </div>
         <div class="form-group">
-          <input type="text" placeholder="* Company" name="company" required value={company} onChange={e => onChange(e)} />
+          <input type="text" placeholder="* Degree or Certificate" name="degree" required value={degree} onChange={e => onChange(e)} />
         </div>
         <div class="form-group">
-          <input type="text" placeholder="Location" name="location" value={location} onChange={e => onChange(e)} />
+          <input type="text" placeholder="Field of Study" name="fieldofstudy" value={fieldofstudy} onChange={e => onChange(e)} />
         </div>
         <div class="form-group">
           <h4>From Date</h4>
@@ -61,7 +60,7 @@ const AddExperience = ({ addExperience, history }) => {
           onChange={e => {
               setFormData({ ...formData, current: !current }); 
               toggleDisabled(!toDateDisabled);
-              }}/> Current Job</p>
+              }}/> Current School or Bootcamp</p>
         </div>
         <div class="form-group">
           <h4>To Date</h4>
@@ -73,7 +72,7 @@ const AddExperience = ({ addExperience, history }) => {
             name="description"
             cols="30"
             rows="5"
-            placeholder="Job Description"
+            placeholder="Program Description"
             value={description} onChange={e => onChange(e)}
           ></textarea>
         </div>
@@ -84,8 +83,8 @@ const AddExperience = ({ addExperience, history }) => {
     )
 }
 
-AddExperience.propTypes = {
-    addExperience: PropTypes.func.isRequired,
+AddEducation.propTypes = {
+    addEducation: PropTypes.func.isRequired,
 }
 
-export default connect(null, { addExperience })(AddExperience)
+export default connect(null, { addEducation })(AddEducation)
