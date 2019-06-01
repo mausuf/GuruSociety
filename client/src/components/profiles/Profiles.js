@@ -5,14 +5,41 @@ import { connect } from "react-redux";
 import Spinner from "../layout/Spinner"; // Loading gif while profiles are loading
 import { getProfiles } from "../../actions/profile";
 
+import ProfileItem from "./ProfileItem";
+
 const Profiles = ({ getProfiles, profile: { profiles, loading } }) => { // the prop profile state, need profiles & loading
     // As soon as this loads, run getProfiles thus useEffect()
     useEffect(() => { // This will add profiles into state (as seen from REDUX DEV TOOLS)
         getProfiles(); 
     }, []); // Add empty brackets for this Hook to run only once and not keep looping
     
-    return <div />
+// get profiles and ONLY show them if LOADING is FALSE; from backend routes->api->profile.js within this file: Get api/profile the .populate brings in name and avatar from the user
+return (
+    <Fragment>
+        {loading ? (
+        <Spinner />
+        ) : (
+        <Fragment>
+        <h1 className='large text-primary'>Gurus</h1>
+        <p className='lead'>
+        <i className='fab fa-connectdevelop' /> Browse and connect with tech gurus!
+        </p>
+        <div className='profiles'>
+        {/* Check to see if there are any profiles */}
+        {profiles.length > 0 ? (
+            profiles.map(profile => (
+            <ProfileItem key={profile._id} profile={profile} />
+            ))
+        ) : (
+            <h4>No profiles found...</h4>
+        )}
+        </div>
+        </Fragment>
+        )}
+    </Fragment>
+    )
 };
+
 
 Profiles.propTypes = {
     getProfiles: PropTypes.func.isRequired,
