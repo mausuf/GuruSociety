@@ -18,7 +18,7 @@ import Education from "./Education";
 const Dashboard = ({ getCurrentProfile, auth: { user }, profile: { profile, loading }, deleteAccount }) => {   // Destructure props since we NEED getCurrentProfile, split into 3, won't work otherwise; For Loading GIF, pull out profile and loading state from profile
     useEffect(() => {
         getCurrentProfile();
-    }, []); // put empty set of brackets since this only needs to run ONCE
+    }, [getCurrentProfile]); // put empty set of brackets since this only needs to run ONCE
 
     // If the profile is null and still loading, THEN show spinner, ELSE bring in Fragment(if user exists, show user name)
     return loading && profile === null ? ( <Spinner /> ) : ( <Fragment> 

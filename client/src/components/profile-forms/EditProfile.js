@@ -50,7 +50,7 @@ const EditProfile = ({ profile: {profile, loading}, createProfile, getCurrentPro
             instagram: loading || !profile.social ? '' : profile.social.instagram
           });
     
-    }, [loading]); // useEffect will keep reloading so [] with prop of loading -> so when it loads this is when it will run
+    }, [loading, getCurrentProfile]); // useEffect will keep reloading so [] with prop of loading -> so when it loads this is when it will run
 
     const { // Destructure the above so these can use these as variables
         company,

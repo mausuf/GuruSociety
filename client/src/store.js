@@ -1,7 +1,7 @@
 // Boiler plate code below ---> in order to run Redux Devtools otherwise error in redux devtools: "No store found. Make sure to follow the instructions."
 
 import { createStore, applyMiddleware, compose }from "redux"; // applyMiddleware is used for Thunk; added compose for Heroku testing
-import { composeWithDevTools } from "redux-devtools-extension";
+// import { composeWithDevTools } from "redux-devtools-extension"; ---> Commenting out due to Console Error, not used for Heroku Testing ---> Part of original code
 import thunk from "redux-thunk"; // thunk is middleware
 import  rootReducer from "./reducers"; // Combining all reducers into root reducer; We will have multiple reducers e.g. auth, profile, alert; from file called 
 

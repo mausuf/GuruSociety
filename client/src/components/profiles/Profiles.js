@@ -11,7 +11,7 @@ const Profiles = ({ getProfiles, profile: { profiles, loading } }) => { // the p
     // As soon as this loads, run getProfiles thus useEffect()
     useEffect(() => { // This will add profiles into state (as seen from REDUX DEV TOOLS)
         getProfiles(); 
-    }, []); // Add empty brackets for this Hook to run only once and not keep looping
+    }, [getProfiles]); // Add empty brackets for this Hook to run only once and not keep looping
     
 // get profiles and ONLY show them if LOADING is FALSE; from backend routes->api->profile.js within this file: Get api/profile the .populate brings in name and avatar from the user
 return (
