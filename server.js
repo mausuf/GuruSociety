@@ -9,8 +9,8 @@ connectDB();
 // Init Middleware
 app.use(express.json({ extended: false })); //Make POST request in Postman to test
 
-//Getting rid of this for Heroku Deployment
-// app.get('/', (req, res) => res.send("API is Running"));
+//Getting rid of this for Heroku Deployment (deleted)
+
 
 // Define Routes
 app.use("/api/users", require("./routes/api/users"));
