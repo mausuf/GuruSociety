@@ -27,3 +27,6 @@ export const UPDATE_PROFILE = "UPDATE_PROFILE";
 
 // Clear Profile on Logout, so if multiple users login and logout, it clears the state of the OLD user (without having to reload the webpage)
 export const CLEAR_PROFILE = "CLEAR_PROFILE";
+
+// CLEAR_PROFILE will be used in conjunction with ACCOUNT_DELETED to remove the Profile from State
+export const ACCOUNT_DELETED = "ACCOUNT_DELETED";

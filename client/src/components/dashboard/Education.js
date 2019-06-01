@@ -6,8 +6,10 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import Moment from "react-moment"; // NPM Install 'moment' & 'react-moment'
 
+import { deleteEducation } from "../../actions/profile";
+
 // Have education passed in from parent component Dashboard.js -> add prop of education
-const Education = ({ education }) => {
+const Education = ({ education, deleteEducation }) => {
     // variable educations Loops through experiences(via map) -> map takes in a function: for each education return JSX of td
     const educations = education.map(edu => (
         <tr key={edu._id}>
@@ -20,7 +22,9 @@ const Education = ({ education }) => {
                 }
             </td>
             <td>
-                <button className="btn btn-danger">Delete</button>
+                <button className="btn btn-danger"
+                onClick={() => deleteEducation(edu._id)}
+                >Delete</button>
             </td>
         </tr>
     ));
@@ -49,6 +53,7 @@ const Education = ({ education }) => {
 
 Education.propTypes = {
     education: PropTypes.array.isRequired, // education is an array so ES7 [ ptar ]
+    deleteEducation: PropTypes.func.isRequired, // ES7 [ ptfr ]
 }
 
-export default Education
+export default connect(null, { deleteEducation })(Education);

@@ -5,6 +5,8 @@ import {
     GET_PROFILE,
     PROFILE_ERROR, 
     UPDATE_PROFILE,
+    CLEAR_PROFILE,
+    ACCOUNT_DELETED,
 } from "./types";
 
 // Get the current user's profile
@@ -161,5 +163,25 @@ export const deleteEducation = id => async dispatch => {
             type: PROFILE_ERROR,
             payload: { msg: err.response.statusText, status: err.response.status }
         });
+    }
+};
+
+// Delete Account & Profile
+    // Will not take any parameters in since the account will be identified via the TOKEN. Entire action is wrapped around confirm statement since this is a Dangerous Action.
+export const deleteAccount = () => async dispatch => {
+if(window.confirm("Are you sure?! This cannot be undone :O")){
+        try {
+            const res = await axios.delete("/api/profile");
+
+            dispatch({ type: CLEAR_PROFILE });
+            dispatch({ type: ACCOUNT_DELETED });
+
+            dispatch(setAlert("Your account has been deleted. Hope you join us again soon!", "danger"));
+        } catch(err) {
+            dispatch({
+                type: PROFILE_ERROR,
+                payload: { msg: err.response.statusText, status: err.response.status }
+            });
+        }
     }
 };

@@ -5,8 +5,10 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import Moment from "react-moment"; // NPM Install 'moment' & 'react-moment'
 
-// Have experiences passed in from parent component Dashboard.js -> add prop of experience
-const Experience = ({ experience }) => {
+import { deleteExperience } from "../../actions/profile"
+
+// Have experiences passed in from parent component Dashboard.js -> add prop of experience; deleteExperience prop added
+const Experience = ({ experience, deleteExperience }) => {
     // variable experiences Loops through experiences(via map) -> map takes in a function: for each experience return JSX of td
     const experiences = experience.map(exp => (
         <tr key={exp._id}>
@@ -19,7 +21,9 @@ const Experience = ({ experience }) => {
                 }
             </td>
             <td>
-                <button className="btn btn-danger">Delete</button>
+                <button 
+                className="btn btn-danger" 
+                onClick={() => deleteExperience(exp._id)} >Delete</button>
             </td>
         </tr>
     ));
@@ -48,6 +52,7 @@ const Experience = ({ experience }) => {
 
 Experience.propTypes = {
     experience: PropTypes.array.isRequired, // experience is an array so ES7 [ ptar ]
+    deleteExperience: PropTypes.func.isRequired, // ES7 [ ptfr ]
 }
 
-export default Experience
+export default connect(null,{ deleteExperience})(Experience); // Forgot to bring in conenct previously, so bringing in now
