@@ -1,6 +1,7 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const app = express();
+const path = require("path"); // For Heroku Deployment
 
 // Connect Database
 connectDB();
@@ -8,13 +9,26 @@ connectDB();
 // Init Middleware
 app.use(express.json({ extended: false })); //Make POST request in Postman to test
 
-app.get('/', (req, res) => res.send("API is Running"));
+//Getting rid of this for Heroku Deployment
+// app.get('/', (req, res) => res.send("API is Running"));
 
 // Define Routes
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/profile", require("./routes/api/profile"));
 app.use("/api/posts", require("./routes/api/posts"));
+
+// ----Heroku Deployment----
+// Serve static assets in production
+if(process.env.NODE_ENV === "production") {
+    // Set static folder - client/build to be the static folder
+    app.use(express.static("cliet/build"));
+    // Route to * (anything besides the API routes above), then load the index.html, via current directory (__dirname)
+    app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+    });
+};
+// -------------------------
 
 const PORT = process.env.PORT || 5000;
 

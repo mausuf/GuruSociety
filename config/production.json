@@ -1,0 +1,6 @@
+{
+    "mongoURI": "mongodb+srv://mausuf:mausufpassword@gurusociety-eo7dn.mongodb.net/test?retryWrites=true",
+    "jwtSecret": "mysecrettoken",
+    "githubClientId": "eaef352dd79a9d19f7de",
+    "githubSecret": "8426ef7f0dfe2b9ee1ef96d1cfccb2f9a35012d3"
+}
