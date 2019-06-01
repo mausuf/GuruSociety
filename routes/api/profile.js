@@ -14,6 +14,10 @@ const config = require("config");
 const Profile = require("../../models/Profile");
 const User = require("../../models/User");
 
+//Bring in Post(comments) models --> First iteration of this used to be able to delete post(comments) upon Account Deletion!
+const Post = require("../../models/Post");
+
+
 // @route   GET api/profile/me --> route to just get ours based on the user id that's in the token
 // @desc    Get current user's profile
 // @access  Private (Use auth middleware)
@@ -156,6 +160,8 @@ router.get("/user/:user_id", async (req, res) => {
 router.delete("/", auth, async (req, res) => {
     try {
         //@todo - remove users posts
+        //REMOVE USER POSTS(COMMENTS) ---> MUST be done BEFORE Removing Profile and User
+        await Post.deleteMany({ user:req.user.id });
 
         //REMOVE PROFILE
         await Profile.findOneAndRemove({ user: req.user.id }); // No need to Get anything, so no need for variable
