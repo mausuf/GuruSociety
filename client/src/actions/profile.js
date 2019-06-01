@@ -7,6 +7,8 @@ import {
     UPDATE_PROFILE,
     CLEAR_PROFILE,
     ACCOUNT_DELETED,
+    GET_PROFILES,
+    GET_REPOS
 } from "./types";
 
 // Get the current user's profile
@@ -25,6 +27,66 @@ export const getCurrentProfile = () => async dispatch => {
         });
     }
 };
+
+// -----------------------------------------
+// ---------For Profile List Page-----------
+
+// Get all profiles ---> Choosing to name the const getProfiles
+export const getProfiles = () => async dispatch => {
+    try {
+        const res = await axios.get("/api/profile") // Hitting back end api/routes/
+        
+        // Clear what ever is in the curreny profile when user is going to PROFILE LIST PAGE to view ALL PROFILES; may not be necessary but will prevent the momentary flashing of past user's profile.
+        dispatch({ type: CLEAR_PROFILE });
+
+        dispatch({
+            type: GET_PROFILES,
+            payload: res.data  // the route returns all the profile data, that will be put into this state
+        });
+    } catch(err) {
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status } // .statusText gets the message text
+        });
+    }
+};
+
+// Get Profile By ID ---> To be able to access/visit a fellow user's profile from PROFILE LIST page
+export const getProfileById = userId => async dispatch => { // Returning by userId NOT profileId
+    try {
+        const res = await axios.get(`/api/profile/user/${userId}`) // Hitting back end api/routes/
+
+        dispatch({
+            type: GET_PROFILE, // Get PROFILE by userId
+            payload: res.data  // the route returns all the profile data, that will be put into this state
+        });
+    } catch(err) {
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status } // .statusText gets the message text
+        });
+    }
+};
+
+// Get GITHUB Repos
+export const getGithubRepos = username => async dispatch => {  // Get Github repos by Github USERNAME
+    try {
+        const res = await axios.get(`/api/profile/github/${username}`) // Hitting back end
+
+        dispatch({
+            type: GET_REPOS,
+            payload: res.data  // the route returns all github repos, that will be put into this state
+        });
+    } catch(err) {
+        dispatch({ // Error code remains the same
+            type: PROFILE_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status } // .statusText gets the message text
+        });
+    }
+};
+
+// -----------------------------------------
+// -----------------------------------------
 
 // Create or Update a Profile ---> No need to create REDUCER since using already created ones: GET_PROFILE & PROFILE ERROR
 export const createProfile = (formData, history, edit = false) => async dispatch => { // Pass in 1) formData that's submitted 2) histroy object that has a method called PUSH that redirects to a clientside route 3) edit: To know if user is updating/editing or creating a new profile, which will be set to false by default

@@ -1,5 +1,5 @@
 /* eslint-disable default-case */
-import { GET_PROFILE, PROFILE_ERROR, CLEAR_PROFILE, UPDATE_PROFILE } from "../actions/types";
+import { GET_PROFILE, PROFILE_ERROR, CLEAR_PROFILE, UPDATE_PROFILE, GET_PROFILES, GET_REPOS } from "../actions/types";
 
 const initialState = {   // initialState Get profile, create, update, clear from state
     profile: null,       // When getting logged in, profile will make a req and get all of the user's profile data, as well as other user's profile data when visiting them
@@ -20,6 +20,12 @@ export default function(state = initialState, action) {
                 profile: payload,  // Set profile to the payload
                 loading: false  // Set loading to false once req is done
             }
+        case GET_PROFILES: // To view ALL Profiles
+            return {
+                ...state,
+                profiles: payload,
+                loading: false
+            }
         case PROFILE_ERROR:
             return {
                 ...state,
@@ -32,6 +38,12 @@ export default function(state = initialState, action) {
                 profile: null,  // Clear profile
                 repos: [],  // Set repos back to empty
                 loading:false
+            }
+        case GET_REPOS:
+            return {
+                ...state,  // return state
+                repos: payload, // fill the const initialState.repos array (from above) with Github repo data
+                loading: false
             }
         default:
             return state;
