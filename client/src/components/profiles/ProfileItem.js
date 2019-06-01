@@ -1,0 +1,1 @@
+// CHILD COMPONENT OF Profile.js ---> Represents individual profile items in the Profiles List
