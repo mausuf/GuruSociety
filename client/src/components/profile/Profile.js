@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import Spinner from "../layout/Spinner";
 import { getProfileById } from "../../actions/profile";
+import { Link } from "react-router-dom";
 
 
 const Profile = ({ getProfileById, profile: { profile, loading }, auth, match }) => { // Destructure Profile
@@ -12,7 +13,14 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth, match })
     }, [getProfileById]); //getProfileById to avoid console warning and to run it immediately when the profile mounts
 
     return <Fragment>
-        {profile === null || loading ? <Spinner /> : <Fragment>dis the users profile</Fragment>} {/* If profile = to null, OR loading is true, THEN show a Spinner ELSE show Fragment with all the profile stuff :) */}
+        {profile === null || loading ? <Spinner /> : <Fragment> {/* If profile = to null, OR loading is true, THEN show a Spinner ELSE show Fragment with all the profile stuff :) */}
+
+            <Link to="/profiles" className="btn btn-light">Back to Profiles</Link>
+            
+            {/* Link to Edit User Profile */}
+            {auth.isAuthenticated && auth.loading === false && auth.user._id === profile.user._id && (<Link to="/edit-profile" className="btn btn-dark">Edit Profile</Link>)}   {/* if the user is logged in is True AND user is loading is False AND if the authenticated user is in thier own profile Then show Btn for Link to edit-profile route */}
+    
+        </Fragment>} 
     </Fragment>
 }
 
