@@ -6,7 +6,11 @@ import Spinner from "../layout/Spinner";
 import { getProfileById } from "../../actions/profile";
 
 
-const Profile = props => {
+const Profile = ({ getProfileById, profile: { profile, loading }, auth, match }) => { // Destructure Profile
+    useEffect(() => {
+        getProfileById(match.params.id);
+    }, [getProfileById]); //getProfileById to avoid console warning and to run it immediately when the profile mounts
+
     return (
         <div>
             this is user's profile

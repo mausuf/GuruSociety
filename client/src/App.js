@@ -18,7 +18,9 @@ import EditProfile from "./components/profile-forms/EditProfile";
 import AddExperience from "./components/profile-forms/AddExperience";
 import AddEducation from "./components/profile-forms/AddEducation";
 // Profiles LIST
-import Profiles from "./components/profiles/Profiles"
+import Profiles from "./components/profiles/Profiles";
+// User Profile
+import Profile from "./components/profile/Profile";
 
 // Redux
 import { Provider } from "react-redux"; // react-reduc package combines the two together by the Provider. So we need to wrap everything in provider, just like Router
@@ -53,6 +55,7 @@ return (
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/profiles" component={Profiles} /> {/* profiles is a public route */}
+          <Route exact path="/profile/:id" component={Profile} /> {/* /:id because user ID is being passed into this specific profile */}
           <PrivateRoute exact path="/dashboard" component={Dashboard} />  {/* Ensure you have a SWITCH for this to work. This will use PrivateRoute so users can't type in /dashboard AFTER logging out and be able to access it! Now for any route we want the user to be logged in for, we can use PRIVATEROUTE instead of normal ROUTE */}
           <PrivateRoute exact path="/create-profile" component={CreateProfile} /> 
           <PrivateRoute exact path="/edit-profile" component={EditProfile} /> 
