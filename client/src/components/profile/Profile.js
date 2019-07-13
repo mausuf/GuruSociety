@@ -11,11 +11,9 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth, match })
         getProfileById(match.params.id);
     }, [getProfileById]); //getProfileById to avoid console warning and to run it immediately when the profile mounts
 
-    return (
-        <div>
-            this is user's profile
-        </div>
-    )
+    return <Fragment>
+        {profile === null || loading ? <Spinner /> : <Fragment>dis the users profile</Fragment>} {/* If profile = to null, OR loading is true, THEN show a Spinner ELSE show Fragment with all the profile stuff :) */}
+    </Fragment>
 }
 
 Profile.propTypes = {
