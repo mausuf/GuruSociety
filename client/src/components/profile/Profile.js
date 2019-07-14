@@ -5,12 +5,13 @@ import { connect } from "react-redux";
 import Spinner from "../layout/Spinner";
 import { getProfileById } from "../../actions/profile";
 import { Link } from "react-router-dom";
+import ProfileTop from "./ProfileTop";
 
 
 const Profile = ({ getProfileById, profile: { profile, loading }, auth, match }) => { // Destructure Profile
     useEffect(() => {
         getProfileById(match.params.id);
-    }, [getProfileById]); //getProfileById to avoid console warning and to run it immediately when the profile mounts
+    }, [getProfileById, match.params.id]); //getProfileById to avoid console warning and to run it immediately when the profile mounts;; Added match.params.id to fix use effect dependencies error
 
     return <Fragment>
         {profile === null || loading ? <Spinner /> : <Fragment> {/* If profile = to null, OR loading is true, THEN show a Spinner ELSE show Fragment with all the profile stuff :) */}
@@ -18,8 +19,15 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth, match })
             <Link to="/profiles" className="btn btn-light">Back to Profiles</Link>
             
             {/* Link to Edit User Profile */}
-            {auth.isAuthenticated && auth.loading === false && auth.user._id === profile.user._id && (<Link to="/edit-profile" className="btn btn-dark">Edit Profile</Link>)}   {/* if the user is logged in is True AND user is loading is False AND if the authenticated user is in thier own profile Then show Btn for Link to edit-profile route */}
+            {auth.isAuthenticated && auth.loading === false && auth.user._id === profile.user._id && (<Link to="/edit-profile" className="btn btn-dark"> {/* if the user is logged in is True AND user is loading is False AND if the authenticated user is in thier own profile Then show Btn for Link to edit-profile route */}
+            Edit Profile
+            </Link>)}   
     
+            {/* grid for formatting */}
+            <div class="profile-grid my-1">
+                <ProfileTop profile={profile} />
+            </div>
+
         </Fragment>} 
     </Fragment>
 }
