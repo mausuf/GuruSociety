@@ -7,6 +7,7 @@ import { getProfileById } from "../../actions/profile";
 import { Link } from "react-router-dom";
 import ProfileTop from "./ProfileTop";
 import ProfileAbout from "./ProfileAbout";
+import ProfileExperience from "./ProfileExperience";
 
 
 const Profile = ({ getProfileById, profile: { profile, loading }, auth, match }) => { // Destructure Profile
@@ -14,8 +15,8 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth, match })
         getProfileById(match.params.id);
     }, [getProfileById, match.params.id]); //getProfileById to avoid console warning and to run it immediately when the profile mounts;; Added match.params.id to fix use effect dependencies error
 
-    return <Fragment>
-        {profile === null || loading ? <Spinner /> : <Fragment> {/* If profile = to null, OR loading is true, THEN show a Spinner ELSE show Fragment with all the profile stuff :) */}
+    return (<Fragment>
+        {profile === null || loading ? ( <Spinner /> ) : ( <Fragment> {/* If profile = to null, OR loading is true, THEN show a Spinner ELSE show Fragment with all the profile stuff :) */}
 
             <Link to="/profiles" className="btn btn-light">Back to Profiles</Link>
             
@@ -28,11 +29,27 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth, match })
             <div class="profile-grid my-1">
                 <ProfileTop profile={profile} />
                 <ProfileAbout profile={profile} />
+                
+                {/* Integrating Experience Section with ProfileExperience Component */}
+                {/* Loop through experience array, IF GREATER THAN zero, THEN show Fragment where the experiences are mapped through. ELSE show 'No experience credientials' message */}
+                <div className="profile-exp bg-white p-2">
+                    <h2 className="text-primary">Experience</h2>
+                    {profile.experience.length > 0 ? (          
+                        <Fragment>
+                            {profile.experience.map(experience => (
+                                <ProfileExperience key={experience._id} experience={experience} /> // Fragment takes in key since we're iterating through, and pass in actual experience
+                            ))}
+                        </Fragment>
+                    ) : (
+                        <h4>No experience credentials</h4>
+                    )}
+                </div>
             </div>
 
-        </Fragment>} 
+        </Fragment>)}
     </Fragment>
-}
+    )
+};
 
 Profile.propTypes = {
     getProfileById: PropTypes.func.isRequired,
