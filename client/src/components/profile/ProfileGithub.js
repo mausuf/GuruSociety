@@ -5,6 +5,10 @@ import { getGitHubRepos } from "../../actions/profile"; // action that is being 
 import Spinner from "../layout/Spinner";
 
 const ProfileGithub = ({ username, getGitHubRepos, repos }) => { // username passed in; repos will be fetched from the state
+    useEffect(() => {
+        getGitHubRepos(username);
+    }, [getGitHubRepos(username)]);
+    
     return (
         <div>
             
