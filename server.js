@@ -22,7 +22,7 @@ app.use("/api/posts", require("./routes/api/posts"));
 // Serve static assets in production
 if(process.env.NODE_ENV === "production") {
     // Set static folder - client/build to be the static folder
-    app.use(express.static("cliet/build"));
+    app.use(express.static("client/build")); // Fixed spelling to deploy to Heroku
     // Route to * (anything besides the API routes above), then load the index.html, via current directory (__dirname)
     app.get("*", (req, res) => {
         res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
